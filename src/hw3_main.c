@@ -11,6 +11,7 @@ int main() {
         mkdir("tests/output", 0700);
     prepare_input_image_file("building1.ppm"); // copies the image to the images/ directory
     
+    /******************************* prepare all images *******************************/
     char *filenames[] = {
         "building1.ppm",
         "building2.ppm",
@@ -42,7 +43,7 @@ int main() {
         printf("(%d)\n", i + 1);
 
         // buffer
-        char input_filename[256];
+        char input_filename[64];
         strcpy(input_filename, "images/");
         strcat(input_filename, filenames[i]);
 
@@ -50,7 +51,7 @@ int main() {
     }
 
     printf("End load_image unit test(s)...\n\n");
-    
+
     /******************************* create_quadtree *******************************/
     double max_rmse = 25;
     Image *image = load_image("images/building1.ppm");

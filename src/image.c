@@ -74,7 +74,9 @@ void delete_image(Image *image) {
     }
     
     free(image->raster);
+    image->raster = NULL;
     free(image);
+    image = NULL;
 }
 
 unsigned short get_image_width(Image *image) {
