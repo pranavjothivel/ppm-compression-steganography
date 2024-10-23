@@ -94,10 +94,11 @@ unsigned short get_image_height(Image *image) {
 }
 
 unsigned char get_image_intensity(Image *image, unsigned int row, unsigned int col) {
-    (void)image;
-    (void)row;
-    (void)col;
-    return 0;
+    if (image == NULL || row >= image->height || col >= image->width) {
+        return 0;
+    }
+    unsigned char intensity = image->raster[row][col].red;
+    return intensity;
 }
 
 unsigned int hide_message(char *message, char *input_filename, char *output_filename) {
