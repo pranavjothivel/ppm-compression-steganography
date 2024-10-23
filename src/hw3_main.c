@@ -35,7 +35,6 @@ int main() {
         prepare_input_image_file(filenames[i]);
     }
 
-
     /******************************* load_image *******************************/
     printf("Start load_image unit test(s)...\n\n");
 
