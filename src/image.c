@@ -18,7 +18,7 @@ Image *load_image(char *filename) {
     // remember: null terminator 
     char magic_number[3];
     fscanf(fp, "%2s", magic_number);
-    if (!strcmp(magic_number, "P3")) {
+    if (strcmp(magic_number, "P3") != 0) {
         fclose(fp);
         printf("Missing magic number of P3...");
         return NULL;
