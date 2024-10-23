@@ -3,8 +3,6 @@
 
 #include "tests_utils.h"
 
-void run_load_image_unit_test(char *filename);
-
 int main() {
     struct stat st;
     if (stat("tests/output", &st) == -1)
@@ -36,7 +34,7 @@ int main() {
     }
 
     /******************************* load_image *******************************/
-    printf("Start load_image unit test(s)...\n\n");
+    printf("***** Start load_image unit test(s)... *****\n\n");
 
     for (unsigned short i = 0; i < filenames_len; i++) {
         printf("(%d)\n", i + 1);
@@ -46,10 +44,11 @@ int main() {
         strcpy(input_filename, "images/");
         strcat(input_filename, filenames[i]);
 
-        run_load_image_unit_test(input_filename);
+        run_load_image_unit_test(input_filename, i + 1);
     }
+    // run_load_image_unit_test("einstein2.ppm", 5);
 
-    printf("End load_image unit test(s)...\n\n");
+    printf("***** End load_image unit test(s)... *****\n\n");
 
     /******************************* create_quadtree *******************************/
     double max_rmse = 25;
@@ -99,17 +98,58 @@ int main() {
     return 0;
 }
 
-void run_load_image_unit_test(char *filename) {
-    Image *image1 = load_image(filename);
-    if (image1) {
+// my functions
+void run_load_image_unit_test(char *filename, short i) {
+    Image *image = load_image(filename);
+    if (image) {
         printf("run_load_image_unit_test for %s\n", filename);
-        printf("Width: %d, Height: %d, Intensity: %d\n", image1->width, image1->height, image1->max_intensity);
-        printf("Intensity at <0,0>: %d\n", get_image_intensity(image1, 0, 0));
-        printf("Intensity at <5,5>: %d\n", get_image_intensity(image1, 5, 5));
-        printf("Intensity at <%d,%d>: %d\n", image1->width, image1->height, get_image_intensity(image1, image1->width, image1->height));
+
+        unsigned int row = 0;
+        unsigned int col = 0;
+
+        printf("Height (Rows): %d, Width (Columns): %d, Intensity: %d\n", image->height, image->width, image->max_intensity);
+
+        printf("Intensity at <0,0>: %d\n", get_image_intensity(image, row, col));
+        printf("Intensity at <0,1>: %d\n", get_image_intensity(image, 0, 1));
+        if (i != 14) {
+            printf("Intensity at <5,5>: %d\n", get_image_intensity(image, 5, 5));
+        }
+        
+
+        if (i == 6 || i == 7 || i == 13 || i == 16) {
+            // row = image1->width - 5;
+            // col = image1->height - 5;
+            // printf("Intensity at <%d,%d>: %d\n", row, col, get_image_intensity(image1, row, col));
+        }
+
+        row = (image->height - 1) / 2;
+        col = (image->width - 1) / 2;
+        printf("Intensity at <%d,%d>: %d\n", row, col, get_image_intensity(image, row, col));
+
+        row = (image->height - 1) / 3;
+        col = (image->width - 1) / 3;
+        printf("Intensity at <%d,%d>: %d\n", row, col, get_image_intensity(image, row, col));
+
+        row = (image->height - 1) / 5;
+        col = (image->width - 1) / 5;
+        printf("Intensity at <%d,%d>: %d\n", row, col, get_image_intensity(image, row, col));
+
+        row = (image->height - 1) / 6;
+        col = (image->width - 1) / 8;
+        printf("Intensity at <%d,%d>: %d\n", row, col, get_image_intensity(image, row, col));
+
+        row = (image->height - 1) / 7;
+        col = (image->width - 1) / 7;
+        printf("Intensity at <%d,%d>: %d\n", row, col, get_image_intensity(image, row, col));
+
+        row = image->height - 1;
+        col = image->width - 1;
+        printf("Intensity at <%d,%d>: %d\n", row, col, get_image_intensity(image, row, col));
+        
         printf("\n");
-        delete_image(image1);
-    } else {
+        delete_image(image);
+    }
+    else {
         printf("Failed to load image: %s\n", filename);
     }
 }
