@@ -18,8 +18,8 @@ typedef struct Pixel {
 
 typedef struct Image {
     // height and width are in pixels
-    unsigned int width; // cols
     unsigned int height; // rows
+    unsigned int width; // cols
     unsigned char max_intensity;
     // upper-left corner has position <row #0, column #0> 
     // and the lower-right corner has position <row #(H-1), column #(W-1)>
