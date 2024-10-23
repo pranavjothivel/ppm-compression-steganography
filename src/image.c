@@ -3,11 +3,11 @@
 Image *load_image(char *filename) {
     char *ext = get_file_extension(filename);
     if (ext == NULL || strcmp(ext, "ppm") != 0) {
-        printf("File provided does not have .ppm extension...");
+        printf("load_image(): File provided does not have .ppm extension... ");
         return NULL;
     }
     if (!check_file_exists(filename)) {
-        printf("Filename is null or does not exist...");
+        printf("load_image(): Filename is null or does not exist... ");
         return NULL;
     }
 
@@ -15,30 +15,44 @@ Image *load_image(char *filename) {
     image->width = 0;
     image->height = 0;
     image->max_intensity = 0;
+
     // fp is file handle
     FILE *fp = fopen(filename, "r");
     
     // remember: null terminator 
     char magic_number[3];
     fscanf(fp, "%2s", magic_number);
+
     if (strcmp(magic_number, "P3") != 0) {
         fclose(fp);
-        printf("Missing magic number of P3...");
+        printf("load_image(): Missing magic number of P3...");
         return NULL;
     }
-    
+
+    file_skip_comments(fp);
     fscanf(fp, "%u %u", &image->width, &image->height);
+
+    file_skip_comments(fp);
     fscanf(fp, "%hhu", &image->max_intensity);
     
     image->raster = malloc(image->height * sizeof(Pixel*));
+
     for (unsigned int i = 0; i < image->height; i++) {
         image->raster[i] = malloc(image->width * sizeof(Pixel));
+
         for (unsigned int j = 0; j < image->width; j++) {
-            unsigned char value;
-            fscanf(fp, "%hhu", &value);
-            image->raster[i][j].red = value;
-            image->raster[i][j].green = value;
-            image->raster[i][j].blue = value;
+            // red = blue = green
+            unsigned char red;
+            unsigned char blue;
+            unsigned char green;
+
+            file_skip_comments(fp);
+            fscanf(fp, "%hhu %hhu %hhu", &red, &green, &blue);
+            file_skip_comments(fp);
+
+            image->raster[i][j].red = red;
+            image->raster[i][j].green = green;
+            image->raster[i][j].blue = blue;
         }
     }
 
@@ -67,8 +81,25 @@ bool check_file_exists(char *filename) {
     }
 }
 
+void file_skip_comments(FILE *fp) {
+    char character;
+    
+    while ((character = fgetc(fp)) != EOF) {
+        if (character == '#') {
+            while ((character = fgetc(fp)) != EOF && character != '\n');
+        } 
+        else if (!isspace(character)) {
+            ungetc(character, fp);
+            break;
+        }
+    }
+}
+
 void delete_image(Image *image) {
-    if (image == NULL) return;
+    if (image == NULL) {
+        printf("delete_image(): Image is null. ");
+        return;
+    }
     for (unsigned int i = 0; i < image->height; i++) {
         free(image->raster[i]);
     }
@@ -81,7 +112,7 @@ void delete_image(Image *image) {
 
 unsigned short get_image_width(Image *image) {
     if (image == NULL) {
-        printf("Invalid image pointer...");
+        printf("get_image_width(): Invalid image pointer. ");
         return 0;
     }
     return image->width;
@@ -89,14 +120,27 @@ unsigned short get_image_width(Image *image) {
 
 unsigned short get_image_height(Image *image) {
     if (image == NULL) {
-        printf("Invalid image pointer...");
+        printf("get_image_width(): Invalid image pointer. ");
         return 0;
     }
     return image->height;
 }
 
 unsigned char get_image_intensity(Image *image, unsigned int row, unsigned int col) {
-    if (image == NULL || row >= image->height || col >= image->width) {
+    // if (image == NULL || row >= image->height || col >= image->width) {
+    //     printf("get_image_intensity(): Image is null, or row is out of bounds, or col is out of bounds. ");
+    //     return 0;
+    // }
+    if (image == NULL) {
+        printf("get_image_intensity(): Image is null. ");
+        return 0;
+    }
+    if (row >= image->height) {
+        printf("get_image_intensity(): Row is out of bounds. ");
+        return 0;
+    }
+    if (col >= image->width) {
+        printf("get_image_intensity(): Col is out of bounds. ");
         return 0;
     }
     unsigned char intensity = image->raster[row][col].red;
