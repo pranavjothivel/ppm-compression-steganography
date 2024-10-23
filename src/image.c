@@ -12,6 +12,9 @@ Image *load_image(char *filename) {
     }
 
     Image* image = malloc(sizeof(Image));
+    image->width = 0;
+    image->height = 0;
+    image->max_intensity = 0;
     // fp is file handle
     FILE *fp = fopen(filename, "r");
     
@@ -26,8 +29,10 @@ Image *load_image(char *filename) {
 
     fscanf(fp, "%u %u", &image->width, &image->height);
     fscanf(fp, "%c", &image->max_intensity);
+    
     image->raster = malloc(image->height * sizeof(Pixel*));
     for (unsigned int i = 0; i < image->height; i++) {
+        image->raster[i] = malloc(image->width * sizeof(Pixel));
         for (unsigned int j = 0; j < image->width; j++) {
             unsigned char value;
             fscanf(fp, "%c", &value);
@@ -63,7 +68,11 @@ bool check_file_exists(char *filename) {
 }
 
 void delete_image(Image *image) {
-    // free each raster
+    if (image == NULL) return;
+    for (unsigned int i = 0; i < image->height; i++) {
+        free(image->raster[i]);
+    }
+    
     free(image->raster);
     free(image);
 }
