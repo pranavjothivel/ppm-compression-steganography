@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <stdbool.h>
 
 #define INFO(...) do {fprintf(stderr, "[          ] [ INFO ] "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n"); fflush(stderr);} while(0)
@@ -17,11 +18,12 @@ typedef struct Pixel {
 
 typedef struct Image {
     // height and width are in pixels
-    unsigned int height; // rows
     unsigned int width; // cols
+    unsigned int height; // rows
     unsigned char max_intensity;
-    //  upper-left corner has position <row #0, column #0> 
-    //  and the lower-right corner has position <row #(H-1), column #(W-1)>
+    // upper-left corner has position <row #0, column #0> 
+    // and the lower-right corner has position <row #(H-1), column #(W-1)>
+    // altneratively, 'raster' could be stored as a 1D row-major order array with helper functions and memory allocated dynamically
     Pixel** raster;
 } Image;
 
@@ -39,5 +41,6 @@ void reveal_image(char *input_filename, char *output_filename);
 // my functions
 char *get_file_extension(char *filename);
 bool check_file_exists(char *filename);
+void file_skip_comments(FILE *fp);
 
 #endif // __IMAGE_H
