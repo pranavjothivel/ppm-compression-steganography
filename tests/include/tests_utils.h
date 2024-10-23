@@ -11,3 +11,6 @@
 
 void copy_file(char *src_filename, char *dest_filename);
 void prepare_input_image_file(char *image_filename);
+
+// my functions
+void run_load_image_unit_test(char *filename, short i);
