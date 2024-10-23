@@ -2,6 +2,7 @@
 #include "image.h"
 
 #include "tests_utils.h"
+
 void run_load_image_unit_test(char *filename);
 
 int main() {
@@ -35,24 +36,7 @@ int main() {
 
 
     /******************************* load_image *******************************/
-    // Image *image1 = load_image("images/tiny.ppm");
-    // printf("Width: %d, Height: %d, Intensity: %d\n", image1->width, image1->height, image1->max_intensity);
-    // printf("Intensity at <0,0>: %d, Intensity at <5,5>: %d\n", get_image_intensity(image1, 0,0), get_image_intensity(image1, 5, 5));
-    // delete_image(image1);
-    // image1 = load_image("images/sbu1.ppm");
-    // printf("Width: %d, Height: %d, Intensity: %d\n", image1->width, image1->height, image1->max_intensity);
-    // printf("Intensity at <0,0>: %d, Intensity at <5,5>: %d\n", get_image_intensity(image1, 0,0), get_image_intensity(image1, 5, 5));
-    // delete_image(image1);
     printf("Start load_image unit test(s)...\n\n");
-
-    // printf("(1)\n");
-    // run_load_image_unit_test("images/sbu1.ppm");
-
-    // printf("(2)\n");
-    // run_load_image_unit_test("images/dog.ppm");
-
-    // printf("(3)\n");
-    // run_load_image_unit_test("images/building1.ppm");
 
     for (unsigned short i = 0; i < filenames_len; i++) {
         printf("(%d)\n", i + 1);
@@ -66,6 +50,7 @@ int main() {
     }
 
     printf("End load_image unit test(s)...\n\n");
+    
     /******************************* create_quadtree *******************************/
     double max_rmse = 25;
     Image *image = load_image("images/building1.ppm");
