@@ -26,16 +26,16 @@ Image *load_image(char *filename) {
         printf("Missing magic number of P3...");
         return NULL;
     }
-
+    
     fscanf(fp, "%u %u", &image->width, &image->height);
-    fscanf(fp, "%c", &image->max_intensity);
+    fscanf(fp, "%hhu", &image->max_intensity);
     
     image->raster = malloc(image->height * sizeof(Pixel*));
     for (unsigned int i = 0; i < image->height; i++) {
         image->raster[i] = malloc(image->width * sizeof(Pixel));
         for (unsigned int j = 0; j < image->width; j++) {
             unsigned char value;
-            fscanf(fp, "%c", &value);
+            fscanf(fp, "%hhu", &value);
             image->raster[i][j].red = value;
             image->raster[i][j].green = value;
             image->raster[i][j].blue = value;

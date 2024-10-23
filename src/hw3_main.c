@@ -2,13 +2,70 @@
 #include "image.h"
 
 #include "tests_utils.h"
+void run_load_image_unit_test(char *filename);
 
 int main() {
     struct stat st;
     if (stat("tests/output", &st) == -1)
         mkdir("tests/output", 0700);
     prepare_input_image_file("building1.ppm"); // copies the image to the images/ directory
+    
+    char *filenames[] = {
+        "building1.ppm",
+        "building2.ppm",
+        "dog.ppm",
+        "eagle.ppm",
+        "einstein1.ppm",
+        "einstein2.ppm",
+        "i376.ppm",
+        "lopsided.ppm",
+        "mascot.ppm",
+        "sbu1.ppm",
+        "smileyface.ppm",
+        "statue.ppm",
+        "times_square.ppm",
+        "tiny.ppm",
+        "wolfie-tiny.ppm",
+        "wolfie.ppm"
+    };
+    unsigned short filenames_len = sizeof(filenames) / sizeof(filenames[0]);
+    for (unsigned short i = 0; i < filenames_len; i++) {
+        prepare_input_image_file(filenames[i]);
+    }
 
+
+    /******************************* load_image *******************************/
+    // Image *image1 = load_image("images/tiny.ppm");
+    // printf("Width: %d, Height: %d, Intensity: %d\n", image1->width, image1->height, image1->max_intensity);
+    // printf("Intensity at <0,0>: %d, Intensity at <5,5>: %d\n", get_image_intensity(image1, 0,0), get_image_intensity(image1, 5, 5));
+    // delete_image(image1);
+    // image1 = load_image("images/sbu1.ppm");
+    // printf("Width: %d, Height: %d, Intensity: %d\n", image1->width, image1->height, image1->max_intensity);
+    // printf("Intensity at <0,0>: %d, Intensity at <5,5>: %d\n", get_image_intensity(image1, 0,0), get_image_intensity(image1, 5, 5));
+    // delete_image(image1);
+    printf("Start load_image unit test(s)...\n\n");
+
+    // printf("(1)\n");
+    // run_load_image_unit_test("images/sbu1.ppm");
+
+    // printf("(2)\n");
+    // run_load_image_unit_test("images/dog.ppm");
+
+    // printf("(3)\n");
+    // run_load_image_unit_test("images/building1.ppm");
+
+    for (unsigned short i = 0; i < filenames_len; i++) {
+        printf("(%d)\n", i + 1);
+
+        // buffer
+        char input_filename[256];
+        strcpy(input_filename, "images/");
+        strcat(input_filename, filenames[i]);
+
+        run_load_image_unit_test(input_filename);
+    }
+
+    printf("End load_image unit test(s)...\n\n");
     /******************************* create_quadtree *******************************/
     double max_rmse = 25;
     Image *image = load_image("images/building1.ppm");
@@ -55,4 +112,19 @@ int main() {
     reveal_image("tests/output/hide_image1.ppm", "tests/output/reveal_image1.ppm");
 
     return 0;
+}
+
+void run_load_image_unit_test(char *filename) {
+    Image *image1 = load_image(filename);
+    if (image1) {
+        printf("run_load_image_unit_test for %s\n", filename);
+        printf("Width: %d, Height: %d, Intensity: %d\n", image1->width, image1->height, image1->max_intensity);
+        printf("Intensity at <0,0>: %d\n", get_image_intensity(image1, 0, 0));
+        printf("Intensity at <5,5>: %d\n", get_image_intensity(image1, 5, 5));
+        printf("Intensity at <%d,%d>: %d\n", image1->width, image1->height, get_image_intensity(image1, image1->width, image1->height));
+        printf("\n");
+        delete_image(image1);
+    } else {
+        printf("Failed to load image: %s\n", filename);
+    }
 }
