@@ -1,22 +1,87 @@
 #include "image.h"
 
-Image *load_image(char *filename) {    
-    (void)filename;
-    return NULL;
+Image *load_image(char *filename) {
+    char *ext = get_file_extension(filename);
+    if (ext == NULL || strcmp(ext, "ppm") != 0) {
+        printf("File provided does not have .ppm extension...");
+        return NULL;
+    }
+    if (!check_file_exists(filename)) {
+        printf("Filename is null or does not exist...");
+        return NULL;
+    }
+
+    Image* image = malloc(sizeof(Image));
+    // fp is file handle
+    FILE *fp = fopen(filename, "r");
+    
+    // remember: null terminator 
+    char magic_number[3];
+    fscanf(fp, "%2s", magic_number);
+    if (!strcmp(magic_number, "P3")) {
+        fclose(fp);
+        printf("Missing magic number of P3...");
+        return NULL;
+    }
+
+    fscanf(fp, "%u %u", &image->width, &image->height);
+    fscanf(fp, "%c", &image->max_intensity);
+    image->raster = malloc(image->height * sizeof(Pixel*));
+    for (unsigned int i = 0; i < image->height; i++) {
+        for (unsigned int j = 0; j < image->width; j++) {
+            unsigned char value;
+            fscanf(fp, "%c", &value);
+            image->raster[i][j].red = value;
+            image->raster[i][j].green = value;
+            image->raster[i][j].blue = value;
+        }
+    }
+
+    return image;
+}
+
+char *get_file_extension(char *filename) {
+    char *ext = strrchr(filename, '.');
+    if (ext == NULL) {
+        return NULL;
+    }
+    else {
+        // increment pointer by 1 to return file extension without '.'
+        return ext + 1;
+    }
+}
+
+bool check_file_exists(char *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) {
+        return false;
+    }
+    else {
+        fclose(fp);
+        return true;
+    }
 }
 
 void delete_image(Image *image) {
-    (void)image;
+    // free each raster
+    free(image->raster);
+    free(image);
 }
 
 unsigned short get_image_width(Image *image) {
-    (void)image;
-    return 0;
+    if (image == NULL) {
+        printf("Invalid image pointer...");
+        return 0;
+    }
+    return image->width;
 }
 
 unsigned short get_image_height(Image *image) {
-    (void)image;
-    return 0;
+    if (image == NULL) {
+        printf("Invalid image pointer...");
+        return 0;
+    }
+    return image->height;
 }
 
 unsigned char get_image_intensity(Image *image, unsigned int row, unsigned int col) {

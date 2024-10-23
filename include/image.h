@@ -3,12 +3,26 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 
 #define INFO(...) do {fprintf(stderr, "[          ] [ INFO ] "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n"); fflush(stderr);} while(0)
 #define ERROR(...) do {fprintf(stderr, "[          ] [ ERR  ] "); fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n"); fflush(stderr);} while(0) 
 
+typedef struct Pixel {
+    unsigned char red;
+    unsigned char green;
+    unsigned char blue;
+} Pixel;
+
 typedef struct Image {
-    char placeholder[1];  // This is a placeholder. You should not use this struct.
+    // height and width are in pixels
+    unsigned int height; // rows
+    unsigned int width; // cols
+    unsigned char max_intensity;
+    //  upper-left corner has position <row #0, column #0> 
+    //  and the lower-right corner has position <row #(H-1), column #(W-1)>
+    Pixel** raster;
 } Image;
 
 Image *load_image(char *filename);
@@ -21,5 +35,9 @@ unsigned int hide_message(char *message, char *input_filename, char *output_file
 char *reveal_message(char *input_filename);
 unsigned int hide_image(char *secret_image_filename, char *input_filename, char *output_filename);
 void reveal_image(char *input_filename, char *output_filename);
+
+// my functions
+char *get_file_extension(char *filename);
+bool check_file_exists(char *filename);
 
 #endif // __IMAGE_H
