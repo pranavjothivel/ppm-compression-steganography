@@ -4,17 +4,18 @@ QTNode *create_quadtree(Image *image, double max_rmse) {
     return create_quadtree_helper(image, max_rmse, 0, 0, image->height, image->width);
 }
 
-QTNode *create_quadtree_helper(Image *image, double max_rmse, int row, int col, int row_end, int col_end) {
-    // row_end is height
-    // col_end is column
-    unsigned char rmse = compute_rmse(image, row, row_end, col, col_end);
+QTNode *create_quadtree_helper(Image *image, double max_rmse, int row, int col, int height, int width) {
+    if (row >= height || col >= width) {
+        return NULL;
+    }
+    unsigned char rmse = compute_rmse(image, row, col, height, width);
     if (rmse <= max_rmse) {
         return NULL;
     }
 
     // midpoint formulas
-    unsigned int row_mid = (row + row_end) / 2;
-    unsigned int col_mid = (col + col_end) / 2;
+    int row_mid = (row + height) / 2;
+    int col_mid = (col + width) / 2;
 
     QTNode *node = malloc(sizeof(QTNode));
     if (node == NULL) {
@@ -23,20 +24,20 @@ QTNode *create_quadtree_helper(Image *image, double max_rmse, int row, int col, 
     }
 
     node->child1 = create_quadtree_helper(image, max_rmse, row, col, row_mid, col_mid);
-    node->child2 = create_quadtree_helper(image, max_rmse, row, col_mid, row_mid, col_end);   // Top-right
-    node->child3 = create_quadtree_helper(image, max_rmse, row_mid, col, row_end, col_mid);   // Bottom-left
-    node->child4 = create_quadtree_helper(image, max_rmse, row_mid, col_mid, row_end, col_end); // Bottom-right
+    node->child2 = create_quadtree_helper(image, max_rmse, row, col_mid, row_mid, width);   // Top-right
+    node->child3 = create_quadtree_helper(image, max_rmse, row_mid, col, height, col_mid);   // Bottom-left
+    node->child4 = create_quadtree_helper(image, max_rmse, row_mid, col_mid, height, width); // Bottom-right
 
     return node;
 }
 
-unsigned char compute_rmse(Image *image, int row, int width, int col, int height) {
+unsigned char compute_rmse(Image *image, int row, int col, int height, int width) {
     double average = compute_average_intensity(image, row, width, col, height);
-    int total_pixels = width * height;
+    int total_pixels = (height - row) * (width - col);
     
     double sum = 0.0;
-    for (unsigned short i = row; i < row + width; i++) {
-        for (unsigned short j = col; j < col + height; j++) {
+    for (unsigned short i = row; i < height; i++) {
+        for (unsigned short j = col; j < width; j++) {
             double pixel = (double) image->raster[i][j].red;
             sum += pow(pixel - average, 2);
         }
@@ -46,11 +47,11 @@ unsigned char compute_rmse(Image *image, int row, int width, int col, int height
     return (unsigned char) rmse;
 }
 
-double compute_average_intensity(Image *image, int row, int width, int col, int height) {
+double compute_average_intensity(Image *image, int row, int col, int height, int width) {
     double average = 0.0;
-    int total_pixels = width * height;
-    for (unsigned short i = row; i < row + width; i++) {
-        for (unsigned short j = col; j < col + height; j++) {
+    int total_pixels = (height - row) * (width - col);
+    for (unsigned short i = row; i < height; i++) {
+        for (unsigned short j = col; j < width; j++) {
             average += image->raster[i][j].red;
         }
     }
