@@ -14,3 +14,4 @@ void prepare_input_image_file(char *image_filename);
 
 // my functions
 void run_load_image_unit_test(char *filename, short i);
+void run_rmse_unit_test(char *filename, short i);

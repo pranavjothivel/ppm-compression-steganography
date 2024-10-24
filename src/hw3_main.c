@@ -3,6 +3,11 @@
 
 #include "tests_utils.h"
 
+// test case flags
+bool test_load_image = false;
+bool test_rmse = false;
+bool test_create_quadtree = true;
+
 int main() {
     struct stat st;
     if (stat("tests/output", &st) == -1)
@@ -10,6 +15,7 @@ int main() {
     prepare_input_image_file("building1.ppm"); // copies the image to the images/ directory
     
     /******************************* prepare all images *******************************/
+    printf("***** Start preparing input image files... *****\n\n");
     char *filenames[] = {
         "building1.ppm",
         "building2.ppm",
@@ -32,30 +38,58 @@ int main() {
     for (unsigned short i = 0; i < filenames_len; i++) {
         prepare_input_image_file(filenames[i]);
     }
+    printf("Done.\n\n");
+    printf("***** End preparing input image files... *****\n\n");
 
     /******************************* load_image *******************************/
-    printf("***** Start load_image unit test(s)... *****\n\n");
+    if (test_load_image) {
+        printf("***** Start load_image unit test(s)... *****\n\n");
 
-    for (unsigned short i = 0; i < filenames_len; i++) {
-        printf("(%d)\n", i + 1);
+        for (unsigned short i = 0; i < filenames_len; i++) {
+            printf("(%d)\n", i + 1);
 
-        // buffer
-        char input_filename[64];
-        strcpy(input_filename, "images/");
-        strcat(input_filename, filenames[i]);
+            // buffer
+            char input_filename[64];
+            strcpy(input_filename, "images/");
+            strcat(input_filename, filenames[i]);
 
-        run_load_image_unit_test(input_filename, i + 1);
+            run_load_image_unit_test(input_filename, i + 1);
+        }
+        // run_load_image_unit_test("einstein2.ppm", 5);
+
+        printf("***** End load_image unit test(s)... *****\n\n");
     }
-    // run_load_image_unit_test("einstein2.ppm", 5);
 
-    printf("***** End load_image unit test(s)... *****\n\n");
+    /******************************* compute_rmse and compute_average_intensity *******************************/
+    if (test_rmse) {
+        printf("***** Start compute_rmse and compute_average_intensity unit test(s)... *****\n\n");
 
+        for (unsigned short i = 0; i < filenames_len; i++) {
+            printf("(%d)\n", i + 1);
+
+            // buffer
+            char input_filename[64];
+            strcpy(input_filename, "images/");
+            strcat(input_filename, filenames[i]);
+
+            run_rmse_unit_test(input_filename, i + 1);
+        }
+        // run_load_image_unit_test("einstein2.ppm", 5);
+
+        printf("***** End compute_rmse and compute_average_intensity unit test(s)... *****\n\n");
+    }
+
+    /******************************* common *******************************/
+    
     /******************************* create_quadtree *******************************/
     double max_rmse = 25;
     Image *image = load_image("images/building1.ppm");
     QTNode *root = create_quadtree(image, max_rmse);
     // See tests/input/load_preorder_qt1_qtree.txt for the expected results
     // You will need to write your own code to verify that your quadtree was constructed properly
+    if (test_create_quadtree) {
+        
+    }
     delete_quadtree(root);
     delete_image(image);
 
@@ -147,6 +181,24 @@ void run_load_image_unit_test(char *filename, short i) {
         printf("Intensity at <%d,%d>: %d\n", row, col, get_image_intensity(image, row, col));
         
         printf("\n");
+        delete_image(image);
+    }
+    else {
+        printf("Failed to load image: %s\n", filename);
+    }
+}
+
+void run_rmse_unit_test(char *filename, short i) {
+    Image *image = load_image(filename);
+    (void)i;
+    if (image) {
+        printf("run_rmse_unit_test for %s\n", filename);
+
+        unsigned int row = 0;
+        unsigned int col = 0;
+
+        unsigned char rmse = compute_rmse(image, row, image->height, col, image->width);
+        printf("RMSE is %hhu\n\n", rmse);
         delete_image(image);
     }
     else {
