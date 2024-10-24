@@ -16,7 +16,7 @@
 typedef struct QTNode {
     unsigned char intensity;
     int row, col; // starting top-left position
-    int width, height; // <row + width, col + height> is the ending bottom-right position
+    int height, width; // <row + height - 1, col + width - 1> is the ending bottom-right position
     struct QTNode *child1;
     struct QTNode *child2;
     struct QTNode *child3;
@@ -37,5 +37,6 @@ void save_preorder_qt(QTNode *root, char *filename);
 // my functions
 unsigned char compute_rmse(Image *image, int row, int width, int col, int height);
 double compute_average_intensity(Image *image, int row, int width, int col, int height);
+QTNode *create_quadtree_helper(Image *image, double max_rmse, int row, int col, int row_end, int col_end);
 
 #endif // QTREE_H
