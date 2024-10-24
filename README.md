@@ -3,11 +3,17 @@ Pranav Jothivel
 
 ## Checklist
 - [x] Part 1 Implementation
-- [x] Part 1 Unit Tests
+- [x] Part 1 Unit Tests (incl. Memory Tests with Valgrind)
 - [ ] Part 2 Implementation
-- [ ] Part 2 Unit Tests
+- [ ] Part 2 Unit Tests (incl. Memory Tests with Valgrind)
+  - [x] Test 1: RMSE Calculation Accuracy
+  - [x] Test 2: Average Intensity Calculation (No issue with Test 1, indicates this function is running as expected.)
+  - [ ] Test 3: Quadtree Creation Validity
+  - [ ] Test 4: Null Pointer Handling
+  - [ ] Test 5: Edge Case (1x1 Image)
+  - [ ] Test 6: Large Image Performance
 - [ ] Part 3 Implementation
-- [ ] Part 3 Unit Tests
+- [ ] Part 3 Unit Tests (incl. Memory Tests with Valgrind)
 
 ## AutoTest
 - [x] load_image and delete_image tests
