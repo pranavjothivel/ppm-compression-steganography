@@ -88,7 +88,8 @@ int main() {
     // See tests/input/load_preorder_qt1_qtree.txt for the expected results
     // You will need to write your own code to verify that your quadtree was constructed properly
     if (test_create_quadtree) {
-        
+        printf("***** Start create_quadtree unit test(s)... *****\n\n");
+        printf("***** End create_quadtree unit test(s)... *****\n\n");
     }
     delete_quadtree(root);
     delete_image(image);
