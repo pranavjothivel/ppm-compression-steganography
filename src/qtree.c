@@ -11,7 +11,7 @@ QTNode *create_quadtree_helper(Image *image, double max_rmse, int row, int col, 
     double rmse = compute_rmse(image, row, col, row_end, col_end);
     
     QTNode *node = malloc(sizeof(QTNode));
-    node->intensity = compute_average_intensity(image, row, col, row_end, col_end);
+    node->intensity = (unsigned char) compute_average_intensity(image, row, col, row_end, col_end);
     node->row = row;
     node->col = col;
     node->height = row_end - row;
