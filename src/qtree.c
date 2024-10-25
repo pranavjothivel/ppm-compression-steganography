@@ -4,7 +4,10 @@ QTNode *create_quadtree(Image *image, double max_rmse) {
     return create_quadtree_helper(image, max_rmse, 0, 0, image->height, image->width);
 }
 
-QTNode *create_quadtree_helper(Image *image, double max_rmse, int row, int col, int row_end, int col_end) {
+QTNode *create_quadtree_helper(Image *image, double max_rmse, int row, int col, int height, int width) {
+    int row_end = height;
+    int col_end = width;
+    
     double rmse = compute_rmse(image, row, col, row_end, col_end);
     
     QTNode *node = malloc(sizeof(QTNode));
@@ -18,12 +21,12 @@ QTNode *create_quadtree_helper(Image *image, double max_rmse, int row, int col, 
         printf("create_quadtree_helper(): Memory allocation error...\n");
         return NULL;
     }
-    
-    if (rmse <= max_rmse) {
+
+    if (row_end - row == 1 && col_end - col == 1) {
         node->child1 = node->child2 = node->child3 = node->child4 = NULL;
         return node;
     }
-    if (row_end - row == 1 && col_end - col == 1) {
+    if (rmse <= max_rmse) {
         node->child1 = node->child2 = node->child3 = node->child4 = NULL;
         return node;
     }
