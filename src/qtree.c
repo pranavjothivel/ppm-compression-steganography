@@ -83,7 +83,7 @@ unsigned char compute_average_intensity(Image *image, int row, int col, int heig
         }
     }
     average = average / (double) total_pixels;
-    return (unsigned char) average;
+    return average;
 }
 
 QTNode *get_child1(QTNode *node) {
