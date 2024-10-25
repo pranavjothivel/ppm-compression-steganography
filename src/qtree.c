@@ -74,7 +74,7 @@ double compute_rmse(Image *image, int row, int col, int height, int width) {
     return rmse;
 }
 
-unsigned char compute_average_intensity(Image *image, int row, int col, int height, int width) {
+double compute_average_intensity(Image *image, int row, int col, int height, int width) {
     double average = 0.0;
     int total_pixels = (height - row) * (width - col);
     for (int i = row; i < height; i++) {
