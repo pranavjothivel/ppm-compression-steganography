@@ -7,7 +7,7 @@ QTNode *create_quadtree(Image *image, double max_rmse) {
 QTNode *create_quadtree_helper(Image *image, double max_rmse, int row, int col, int height, int width) {
     int row_end = height;
     int col_end = width;
-    
+
     double rmse = compute_rmse(image, row, col, row_end, col_end);
     
     QTNode *node = malloc(sizeof(QTNode));
@@ -58,7 +58,7 @@ QTNode *create_quadtree_helper(Image *image, double max_rmse, int row, int col, 
     return node;
 }
 
-unsigned char compute_rmse(Image *image, int row, int col, int height, int width) {
+double compute_rmse(Image *image, int row, int col, int height, int width) {
     double average = compute_average_intensity(image, row, col, height, width);
     int total_pixels = (height - row) * (width - col);
     
@@ -71,7 +71,7 @@ unsigned char compute_rmse(Image *image, int row, int col, int height, int width
     }
 
     double rmse = sqrt(sum / (double) total_pixels);
-    return (unsigned char) rmse;
+    return rmse;
 }
 
 double compute_average_intensity(Image *image, int row, int col, int height, int width) {

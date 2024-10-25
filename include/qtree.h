@@ -36,7 +36,7 @@ void save_preorder_qt(QTNode *root, char *filename);
 
 // my functions
 QTNode *create_quadtree_helper(Image *image, double max_rmse, int row, int col, int height, int width);
-unsigned char compute_rmse(Image *image, int row, int col, int height, int width);
+double compute_rmse(Image *image, int row, int col, int height, int width);
 double compute_average_intensity(Image *image, int row, int col, int height, int width);
 void save_preorder_qt_helper(QTNode *root, FILE *fp);
 char *stringify_qt_node(QTNode *node);
