@@ -196,7 +196,7 @@ char *stringify_qt_node(QTNode *node) {
     }
 
     char buffer[40];
-    snprintf(buffer, sizeof(buffer), "%hhu %hhu %hhu %hhu %hhu", node->intensity, node->row, node->height, node->col, node->width);
+    snprintf(buffer, sizeof(buffer), "%hhu %d %d %d %d", node->intensity, node->row, node->height, node->col, node->width);
     strcat(string, buffer);
     return string;
 }
