@@ -199,7 +199,7 @@ QTNode *load_preorder_qt(char *filename) {
         printf("load_preorder_qt(): file does not exist");
         return;
     }
-    
+
     return NULL;
 }
 
@@ -234,7 +234,7 @@ void save_preorder_qt_helper(QTNode *root, FILE *fp) {
 char *stringify_qt_node(QTNode *node) {
     // need to malloc here
     char *string = malloc(40 * sizeof(char));
-    if (node->child1 == NULL && node->child2 == NULL && node->child3 == NULL && node->child4 == NULL) {
+    if (is_leaf_node(node)) {
         strcpy(string, "L ");
     }
     else {
