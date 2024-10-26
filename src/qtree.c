@@ -224,14 +224,14 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
     int row, col;
     int height, width;
 
-    fscanf(fp, "%c %hhu %d %d %d %d", &node_type, &intensity, &row, &col, &height, &width);
+    fscanf(fp, " %c %hhu %d %d %d %d", &node_type, &intensity, &row, &height, &col, &width);
 
     node->intensity = intensity;
     node->row = row;
     node->col = col;
     node->height = height;
     node->width = width;
-    
+
     node-> child1 = node->child2 = node->child3 = node->child4 = NULL;
 
     if (node_type == 'L') {
