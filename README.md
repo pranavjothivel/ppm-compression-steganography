@@ -8,18 +8,17 @@ Pranav Jothivel
 - [ ] Part 2 Unit Tests (incl. Memory Tests with Valgrind)
   - [x] Test 1: RMSE Calculation Accuracy
   - [x] Test 2: Average Intensity Calculation (No issue with Test 1, indicates this function is running as expected.)
-  - [ ] Test 3: Quadtree Creation Validity
-  - [ ] Test 4: Null Pointer Handling
-  - [ ] Test 5: Edge Case (1x1 Image)
-  - [ ] Test 6: Large Image Performance
+  - [X] Test 3: Quadtree Creation Validity
+  - [X] Test 4: Edge Case (1x1 Image)
+  - [ ] Test 5: Large Image Performance
 - [ ] Part 3 Implementation
 - [ ] Part 3 Unit Tests (incl. Memory Tests with Valgrind)
 
 ## AutoTest
 - [x] load_image and delete_image tests
-- [ ] unit_tests_create_quadtree tests
+- [x] unit_tests_create_quadtree tests
 - [ ] unit_tests_load_preorder_qt tests
-- [ ] unit_tests_save_preorder_qt tests
+- [x] unit_tests_save_preorder_qt tests
 - [ ] unit_tests_save_qtree_as_ppm tests
 - [ ] unit_tests_hide_message tests
 - [ ] unit_tests_reveal_message tests
