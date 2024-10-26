@@ -7,7 +7,7 @@
 bool test_load_image = false; // passing valgrind (10/24)
 bool test_rmse = false;       // passing valgrind (10/24)
 bool test_create_quadtree = false; // passing valgrind and codegrade (10/25)
-bool test_preorder_qt = false;
+bool test_preorder_qt = true;
 bool test_save_preorder_qt = false; // passing valgrind and codegrade (10/25)
 
 int main() {
@@ -105,6 +105,7 @@ int main() {
     if (test_preorder_qt) {
         root = load_preorder_qt("tests/input/load_preorder_qt1_qtree.txt");
         // You will need to write your own code to verify that your quadtree was constructed properly
+        save_preorder_qt(root, "tests/output/save_preorder_qt1_qtree_tpq.txt");
         delete_quadtree(root); 
     }
 
