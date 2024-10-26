@@ -196,11 +196,54 @@ void traverse_qtree_to_ppm(QTNode *node, FILE *fp) {
 
 QTNode *load_preorder_qt(char *filename) {
     if (!check_file_exists(filename)) {
-        printf("load_preorder_qt(): file does not exist");
+        printf("load_preorder_qt(): file does not exist.");
         return NULL;
     }
 
-    return NULL;
+    FILE *fp = fopen(filename, "r");
+    QTNode *root = load_preorder_qt_read_line(fp);
+    fclose(fp);
+
+    return root;
+}
+
+QTNode *load_preorder_qt_read_line(FILE *fp) {
+    // checks if file stream has reached the end of the file
+    if (feof(fp)) {
+        return NULL;
+    }
+
+    QTNode *node = malloc(sizeof(QTNode));
+    if (node == NULL) {
+        printf("load_preorder_qt_read_line(): malloc failed.");
+        return NULL;
+    }
+
+    char node_type;
+    unsigned char intensity;
+    int row, col;
+    int height, width;
+
+    fscanf(fp, "%c %hhu %d %d %d %d", &node_type, &intensity, &row, &col, &height, &width);
+
+    node-> child1 = node->child2 = node->child3 = node->child4 = NULL;
+    node->intensity = intensity;
+    node->row = row;
+    node->col = col;
+    node->height = height;
+    node->width = width;
+
+    if (node_type == 'L') {
+        return node;
+    }
+    else if (node_type == 'N') {
+        node->child1 = load_preorder_qt_read_line(fp);
+        node->child2 = load_preorder_qt_read_line(fp);
+        node->child3 = load_preorder_qt_read_line(fp);
+        node->child4 = load_preorder_qt_read_line(fp);
+    }
+
+    return node;
 }
 
 void save_preorder_qt(QTNode *root, char *filename) {

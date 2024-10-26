@@ -44,4 +44,5 @@ void file_print_line(char *line, FILE *fp);
 bool is_leaf_node (QTNode *node);
 void traverse_qtree_to_ppm(QTNode *node, FILE *fp);
 void file_print_pixel_line(int value, FILE *fp);
+QTNode *load_preorder_qt_read_line(FILE *fp);
 #endif // QTREE_H
