@@ -6,9 +6,9 @@
 // test case flags
 bool test_load_image = false; // passing valgrind (10/24)
 bool test_rmse = false;       // passing valgrind (10/24)
-bool test_create_quadtree = true;
+bool test_create_quadtree = false; // passing valgrind and codegrade (10/25)
 bool test_preorder_qt = false;
-bool test_save_preorder_qt = true;
+bool test_save_preorder_qt = false; // passing valgrind and codegrade (10/25)
 
 int main() {
     struct stat st;
