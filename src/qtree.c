@@ -232,7 +232,7 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
     node->height = height;
     node->width = width;
 
-    node-> child1 = node->child2 = node->child3 = node->child4 = NULL;
+    node->child1 = node->child2 = node->child3 = node->child4 = NULL;
 
     if (node_type == 'L') {
         return node;
