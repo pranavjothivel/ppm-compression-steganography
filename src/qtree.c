@@ -151,9 +151,52 @@ void delete_quadtree(QTNode *root) {
 }
 
 void save_qtree_as_ppm(QTNode *root, char *filename) {
-    (void)root;
-    (void)filename;
+    if (root == NULL) {
+        printf("save_qtree_as_ppm(): root node is NULL.");
+        return;
+    }
+    if (filename == NULL) {
+        printf("save_qtree_as_ppm(): filename is NULL.");
+        return;
+    }
+    /*
+    Converting qtree to ppm: 
+     - Think about PPM format: First pixel is top-left and singular in .ppm file. So, iterate through child1 to find leaf node and print first and 
+       repeat for every node to keep printing leaf nodes.
+    */
+    FILE *fp = fopen(filename, "w");
+
+    // file_print_line("P3", fp);
+
+    char buffer[100];
+    snprintf(buffer, sizeof(buffer), "P3\n%d %d\n255", root->width, root->height);
+    file_print_line(buffer, fp);
+
+    // file_print_line("255", fp);
+    // fprintf(fp, "P3\n%d %d\n255\n", root->width, root->height);
+    traverse_qtree_to_ppm(root, fp);
+    fclose(fp);
 }
+
+void traverse_qtree_to_ppm(QTNode *node, FILE *fp) {
+    // two base cases: null node or leaf node and we print
+    if (node == NULL) {
+        return;
+    }
+    if (is_leaf_node(node)) {
+        for (int i = 0; i < node->height; i++) {
+            for (int j = 0; j < node->width; j++) {
+                file_print_pixel_line(get_node_intensity(node), fp);
+            }
+        }
+        return;
+    }
+    traverse_qtree_to_ppm(get_child1(node), fp);
+    traverse_qtree_to_ppm(get_child2(node), fp);
+    traverse_qtree_to_ppm(get_child3(node), fp);
+    traverse_qtree_to_ppm(get_child4(node), fp);
+}
+
 
 QTNode *load_preorder_qt(char *filename) {
     (void)filename;
@@ -205,5 +248,22 @@ char *stringify_qt_node(QTNode *node) {
 }
 
 void file_print_line(char *line, FILE *fp) {
+    if (fp == NULL) {
+        ERROR("file_print_line(): fp is null.");
+        return;
+    }
     fprintf(fp, "%s\n", line);
+}
+
+bool is_leaf_node (QTNode *node) {
+    if ((node->child1 == NULL) && (node->child2 == NULL) && (node->child3 == NULL) & (node->child4 == NULL)) {
+        return true;
+    }
+    return false;
+}
+
+void file_print_pixel_line(int value, FILE *fp) {
+    char buffer[20];
+    snprintf(buffer, sizeof(buffer), "%d %d %d", value, value, value);
+    file_print_line(buffer, fp);
 }
