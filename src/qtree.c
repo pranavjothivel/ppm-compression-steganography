@@ -197,7 +197,7 @@ void traverse_qtree_to_ppm(QTNode *node, FILE *fp) {
 QTNode *load_preorder_qt(char *filename) {
     if (!check_file_exists(filename)) {
         printf("load_preorder_qt(): file does not exist");
-        return;
+        return NULL;
     }
 
     return NULL;
