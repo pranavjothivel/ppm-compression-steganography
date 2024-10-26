@@ -135,7 +135,7 @@ QTNode *get_child4(QTNode *node) {
 }
 
 unsigned char get_node_intensity(QTNode *node) {
-    // we assume that the node poointer is valid.
+    // we assume that the node pointer is valid.
     return node->intensity;
 }
 
