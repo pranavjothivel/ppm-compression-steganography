@@ -166,14 +166,10 @@ void save_qtree_as_ppm(QTNode *root, char *filename) {
     */
     FILE *fp = fopen(filename, "w");
 
-    // file_print_line("P3", fp);
-
     char buffer[100];
     snprintf(buffer, sizeof(buffer), "P3\n%d %d\n255", root->width, root->height);
     file_print_line(buffer, fp);
 
-    // file_print_line("255", fp);
-    // fprintf(fp, "P3\n%d %d\n255\n", root->width, root->height);
     traverse_qtree_to_ppm(root, fp);
     fclose(fp);
 }
@@ -184,6 +180,7 @@ void traverse_qtree_to_ppm(QTNode *node, FILE *fp) {
         return;
     }
     if (is_leaf_node(node)) {
+        // need loop in case leaf node is larger than 1x1 pixel
         for (int i = 0; i < node->height; i++) {
             for (int j = 0; j < node->width; j++) {
                 file_print_pixel_line(get_node_intensity(node), fp);
@@ -196,7 +193,6 @@ void traverse_qtree_to_ppm(QTNode *node, FILE *fp) {
     traverse_qtree_to_ppm(get_child3(node), fp);
     traverse_qtree_to_ppm(get_child4(node), fp);
 }
-
 
 QTNode *load_preorder_qt(char *filename) {
     (void)filename;
