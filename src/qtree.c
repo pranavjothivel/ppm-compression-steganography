@@ -247,8 +247,6 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
     node->height = height;
     node->width = width;
 
-    node->child1 = node->child2 = node->child3 = node->child4 = NULL;
-
     if (node_type == 'L') {
         return node;
     }
@@ -271,6 +269,9 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
     else if (node_type == 'N' && (height - row == 1) && (width - col == 1)) {
         node->child1 = node->child2 = node->child3 = node->child4 = NULL;
         return node;
+    }
+    else {
+        node->child1 = node->child2 = node->child3 = node->child4 = NULL;
     }
     
 
