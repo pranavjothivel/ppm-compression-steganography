@@ -219,7 +219,7 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
 
     int chr = fgetc(fp);
     if (chr == EOF) {
-        printf("load_preorder_qt_read_line(): fgetc EOF reached.\n");
+        // printf("load_preorder_qt_read_line(): fgetc EOF reached.\n");
         return NULL;
     }
 
@@ -275,14 +275,14 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
         return node;
     }
     else if (node_type == 'N') {
-        if (height - row == 1 && width - col == 1) {
+        if ((height - row == 1) && (width - col == 1)) {
             return node;
         } 
-        else if (height - row == 1) {
+        else if ((height - row == 1) && (width - col > 1)) {
             node->child1 = load_preorder_qt_read_line(fp);
             node->child2 = load_preorder_qt_read_line(fp);
         } 
-        else if (width - col == 1) {
+        else if ((width - col == 1) && (height - row > 1)) {
             node->child1 = load_preorder_qt_read_line(fp);
             node->child3 = load_preorder_qt_read_line(fp);
         } 
