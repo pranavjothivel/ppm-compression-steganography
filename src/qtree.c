@@ -218,7 +218,7 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
     int row, col;
     int height, width;
 
-    if ((fscanf(fp, " %c %hhu %d %d %d %d", &node_type, &intensity, &row, &height, &col, &width)) != 6) {
+    if ((fscanf(fp, " %c %hhu %d %d %d %d\n", &node_type, &intensity, &row, &height, &col, &width)) != 6) {
         printf("load_preorder_qt_read_line(): fscanf failed.\n");
         return NULL;
     }
