@@ -148,15 +148,43 @@ unsigned char get_image_intensity(Image *image, unsigned int row, unsigned int c
 }
 
 unsigned int hide_message(char *message, char *input_filename, char *output_filename) {
+    unsigned int counter = 0;
     (void)message;
     (void)input_filename;
     (void)output_filename;
-    return 0;
+    return counter;
 }
 
 char *reveal_message(char *input_filename) {
-    (void)input_filename;
-    return NULL;
+    Image *img = load_image(input_filename);
+    int size = (get_image_width(img)) * (get_image_height(img));
+    delete_image(img);
+
+    char *message = malloc((size) + 1);
+    message[0] = '\0';
+
+    FILE *fp = fopen(input_filename, "r");
+
+    unsigned char pixel[8];
+    while ((fscanf(fp, "%hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu", &pixel[0], &pixel[1], &pixel[2], &pixel[3], &pixel[4], &pixel[5], &pixel[6], &pixel[7])) == 8) {
+        char ch = 0;
+
+        for (unsigned short i = 0; i < 8; i++) {
+            unsigned char lsb = pixel[i] & 1;
+            ch |= (lsb << i);
+        }
+
+        char ch_as_str[2];
+        ch_as_str[0] = ch;
+        ch_as_str[1] = '\0';
+
+        // strncat(message, ch_as_str, sizeof(ch_as_str));
+        strcat(message, ch_as_str);
+    }
+
+    fclose(fp);
+
+    return message;
 }
 
 unsigned int hide_image(char *secret_image_filename, char *input_filename, char *output_filename) {
