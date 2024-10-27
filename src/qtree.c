@@ -225,7 +225,8 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
     int height, width;
 
     if ((fscanf(fp, " %c %hhu %d %d %d %d", &node_type, &intensity, &row, &height, &col, &width)) != 6) {
-        printf("load_preorder_qt_read_line(): fscanf error or end of file has been reached.");
+        // printf("load_preorder_qt_read_line(): fscanf error or end of file has been reached.\n");
+        return NULL;
     }
     
     node->intensity = intensity;
