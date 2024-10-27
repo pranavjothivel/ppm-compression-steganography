@@ -278,11 +278,11 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
         if ((height - row == 1) && (width - col == 1)) {
             return node;
         } 
-        else if ((height - row == 1) && (width - col > 1)) {
+        else if ((height - row == 1)) {
             node->child1 = load_preorder_qt_read_line(fp);
             node->child2 = load_preorder_qt_read_line(fp);
         } 
-        else if ((width - col == 1) && (height - row > 1)) {
+        else if ((width - col == 1)) {
             node->child1 = load_preorder_qt_read_line(fp);
             node->child3 = load_preorder_qt_read_line(fp);
         } 
