@@ -165,6 +165,16 @@ char *reveal_message(char *input_filename) {
 
     FILE *fp = fopen(input_filename, "r");
 
+    // remember: null terminator 
+    char magic_number[3];
+    fscanf(fp, "%2s", magic_number);
+
+    file_skip_comments(fp);
+    fscanf(fp, "%u %u");
+
+    file_skip_comments(fp);
+    fscanf(fp, "%hhu");
+
     unsigned char pixel[8];
     while ((fscanf(fp, "%hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu", &pixel[0], &pixel[1], &pixel[2], &pixel[3], &pixel[4], &pixel[5], &pixel[6], &pixel[7])) == 8) {
         char ch = 0;
