@@ -206,7 +206,6 @@ QTNode *load_preorder_qt(char *filename) {
 
     return root;
 }
-
 QTNode *load_preorder_qt_read_line(FILE *fp) {
     // if (feof(fp)) {
     //     printf("load_preorder_qt_read_line(): EOF reached.\n");
@@ -273,7 +272,6 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
         return node;
     }
     
-
     return node;
 }
 
