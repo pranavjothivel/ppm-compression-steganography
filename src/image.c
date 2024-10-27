@@ -160,7 +160,7 @@ char *reveal_message(char *input_filename) {
     int size = (get_image_width(img)) * (get_image_height(img));
     delete_image(img);
 
-    char *message = malloc((size) + 1);
+    char *message = malloc((8 * size) + 1);
     message[0] = '\0';
 
     FILE *fp = fopen(input_filename, "r");
