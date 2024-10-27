@@ -225,10 +225,12 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
 
     node_type = (char) chr;
 
-    if ((fscanf(fp, " %hhu %d %d %d %d\n", &intensity, &row, &height, &col, &width)) != 5) {
-        printf("load_preorder_qt_read_line(): fscanf failed.\n");
-        return NULL;
-    }
+    fscanf(fp, " %hhu %d %d %d %d\n", &intensity, &row, &height, &col, &width);
+
+    // if ((fscanf(fp, " %hhu %d %d %d %d\n", &intensity, &row, &height, &col, &width)) != 5) {
+    //     printf("load_preorder_qt_read_line(): fscanf failed.\n");
+    //     return NULL;
+    // }
 
     // if ((fscanf(fp, " %c %hhu %d %d %d %d\n", &node_type, &intensity, &row, &height, &col, &width)) != 6) {
     //     printf("load_preorder_qt_read_line(): fscanf failed.\n");
