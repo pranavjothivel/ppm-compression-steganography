@@ -250,28 +250,48 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
 
     node->child1 = node->child2 = node->child3 = node->child4 = NULL;
 
+    // if (node_type == 'L') {
+    //     return node;
+    // }
+    // else if (node_type == 'N' && (height - row == 1)) {
+    //     node->child1 = load_preorder_qt_read_line(fp);
+    //     node->child2 = load_preorder_qt_read_line(fp);
+    // }
+    // else if (node_type == 'N' && (width - col == 1)) {
+    //     node->child1 = load_preorder_qt_read_line(fp);
+    //     node->child3 = load_preorder_qt_read_line(fp);
+    // }
+    // else if (node_type == 'N' && (height - row == 1) && (width - col == 1)) {
+    //     return node;
+    // }
+    // else if (node_type == 'N' && ((height - row) != 1) && ((width - col) != 1)) {
+    //     node->child1 = load_preorder_qt_read_line(fp);
+    //     node->child2 = load_preorder_qt_read_line(fp);
+    //     node->child3 = load_preorder_qt_read_line(fp);
+    //     node->child4 = load_preorder_qt_read_line(fp);
+    // }
+
     if (node_type == 'L') {
         return node;
     }
-    else if (node_type == 'N' && (height - row == 1)) {
-        node->child3 = node->child4 = NULL;
-        node->child1 = load_preorder_qt_read_line(fp);
-        node->child2 = load_preorder_qt_read_line(fp);
-    }
-    else if (node_type == 'N' && (width - col == 1)) {
-        node->child2 = node->child4 = NULL;
-        node->child1 = load_preorder_qt_read_line(fp);
-        node->child3 = load_preorder_qt_read_line(fp);
-    }
-    else if (node_type == 'N' && (height - row == 1) && (width - col == 1)) {
-        node->child1 = node->child2 = node->child3 = node->child4 = NULL;
-        return node;
-    }
-    else if (node_type == 'N' && (height - row != 1) && (width - col != 1)) {
-        node->child1 = load_preorder_qt_read_line(fp);
-        node->child2 = load_preorder_qt_read_line(fp);
-        node->child3 = load_preorder_qt_read_line(fp);
-        node->child4 = load_preorder_qt_read_line(fp);
+    else if (node_type == 'N') {
+        if (height - row == 1 && width - col == 1) {
+            return node;
+        } 
+        else if (height - row == 1) {
+            node->child1 = load_preorder_qt_read_line(fp);
+            node->child2 = load_preorder_qt_read_line(fp);
+        } 
+        else if (width - col == 1) {
+            node->child1 = load_preorder_qt_read_line(fp);
+            node->child3 = load_preorder_qt_read_line(fp);
+        } 
+        else {
+            node->child1 = load_preorder_qt_read_line(fp);
+            node->child2 = load_preorder_qt_read_line(fp);
+            node->child3 = load_preorder_qt_read_line(fp);
+            node->child4 = load_preorder_qt_read_line(fp);
+        }
     }
     
     return node;
