@@ -253,12 +253,6 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
     if (node_type == 'L') {
         return node;
     }
-    else if (node_type == 'N') {
-        node->child1 = load_preorder_qt_read_line(fp);
-        node->child2 = load_preorder_qt_read_line(fp);
-        node->child3 = load_preorder_qt_read_line(fp);
-        node->child4 = load_preorder_qt_read_line(fp);
-    }
     else if (node_type == 'N' && (height - row == 1)) {
         node->child3 = node->child4 = NULL;
         node->child1 = load_preorder_qt_read_line(fp);
@@ -272,6 +266,12 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
     else if (node_type == 'N' && (height - row == 1) && (width - col == 1)) {
         node->child1 = node->child2 = node->child3 = node->child4 = NULL;
         return node;
+    }
+    else if (node_type == 'N') {
+        node->child1 = load_preorder_qt_read_line(fp);
+        node->child2 = load_preorder_qt_read_line(fp);
+        node->child3 = load_preorder_qt_read_line(fp);
+        node->child4 = load_preorder_qt_read_line(fp);
     }
     
     return node;
