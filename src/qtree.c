@@ -88,11 +88,11 @@ double compute_average_intensity(Image *image, int row, int col, int height, int
 
 QTNode *get_child1(QTNode *node) {
     if (node == NULL) {
-        printf("get_child1(): node is null.\n");
+        // printf("get_child1(): node is null.\n");
         return NULL;
     }
     else if (node->child1 == NULL) {
-        printf("get_child1(): child is null.\n");
+        // printf("get_child1(): child is null.\n");
         return NULL;
     }
     return node->child1;
@@ -100,11 +100,11 @@ QTNode *get_child1(QTNode *node) {
 
 QTNode *get_child2(QTNode *node) {
     if (node == NULL) {
-        printf("get_child2(): node is null.\n");
+        // printf("get_child2(): node is null.\n");
         return NULL;
     }
     else if (node->child2 == NULL) {
-        printf("get_child2(): child is null.\n");
+        // printf("get_child2(): child is null.\n");
         return NULL;
     }
     return node->child2;
@@ -112,11 +112,11 @@ QTNode *get_child2(QTNode *node) {
 
 QTNode *get_child3(QTNode *node) {
     if (node == NULL) {
-        printf("get_child3(): node is null.\n");
+        // printf("get_child3(): node is null.\n");
         return NULL;
     }
     else if (node->child3 == NULL) {
-        printf("get_child3(): child is null.\n");
+        // printf("get_child3(): child is null.\n");
         return NULL;
     }
     return node->child3;
@@ -124,11 +124,11 @@ QTNode *get_child3(QTNode *node) {
 
 QTNode *get_child4(QTNode *node) {
     if (node == NULL) {
-        printf("get_child4(): node is null.\n");
+        // printf("get_child4(): node is null.\n");
         return NULL;
     }
     else if (node->child4 == NULL) {
-        printf("get_child4(): child is null.\n");
+        // printf("get_child4(): child is null.\n");
         return NULL;
     }
     return node->child4;
@@ -209,9 +209,9 @@ QTNode *load_preorder_qt(char *filename) {
 
 QTNode *load_preorder_qt_read_line(FILE *fp) {
     // checks if file stream has reached the end of the file
-    if (feof(fp)) {
-        return NULL;
-    }
+    // if (feof(fp)) {
+    //     return NULL;
+    // }
 
     QTNode *node = malloc(sizeof(QTNode));
     if (node == NULL) {
@@ -224,8 +224,10 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
     int row, col;
     int height, width;
 
-    fscanf(fp, " %c %hhu %d %d %d %d ", &node_type, &intensity, &row, &height, &col, &width);
-
+    if ((fscanf(fp, " %c %hhu %d %d %d %d", &node_type, &intensity, &row, &height, &col, &width)) != 6) {
+        printf("load_preorder_qt_read_line(): fscanf error or end of file has been reached.");
+    }
+    
     node->intensity = intensity;
     node->row = row;
     node->col = col;
