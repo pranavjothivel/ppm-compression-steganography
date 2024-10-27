@@ -208,20 +208,33 @@ QTNode *load_preorder_qt(char *filename) {
 }
 
 QTNode *load_preorder_qt_read_line(FILE *fp) {
-    if (feof(fp)) {
-        //printf("load_preorder_qt_read_line(): EOF reached.\n");
-        return NULL;
-    }
+    // if (feof(fp)) {
+    //     printf("load_preorder_qt_read_line(): EOF reached.\n");
+    //     return NULL;
+    // }
 
     char node_type;
     unsigned char intensity;
     int row, col;
     int height, width;
 
-    if ((fscanf(fp, " %c %hhu %d %d %d %d\n", &node_type, &intensity, &row, &height, &col, &width)) != 6) {
+    int chr = fgetc(fp);
+    if (chr == EOF) {
+        printf("load_preorder_qt_read_line(): fgetc EOF reached.\n");
+        return NULL;
+    }
+
+    node_type = (char) chr;
+
+    if ((fscanf(fp, " %hhu %d %d %d %d\n", &intensity, &row, &height, &col, &width)) != 5) {
         printf("load_preorder_qt_read_line(): fscanf failed.\n");
         return NULL;
     }
+
+    // if ((fscanf(fp, " %c %hhu %d %d %d %d\n", &node_type, &intensity, &row, &height, &col, &width)) != 6) {
+    //     printf("load_preorder_qt_read_line(): fscanf failed.\n");
+    //     return NULL;
+    // }
     QTNode *node = malloc(sizeof(QTNode));
     if (node == NULL) {
         printf("load_preorder_qt_read_line(): malloc failed.\n");
