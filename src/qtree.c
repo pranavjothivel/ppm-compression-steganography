@@ -209,9 +209,9 @@ QTNode *load_preorder_qt(char *filename) {
 
 QTNode *load_preorder_qt_read_line(FILE *fp) {
     // checks if file stream has reached the end of the file
-    // if (feof(fp)) {
-    //     return NULL;
-    // }
+    if (feof(fp)) {
+        return NULL;
+    }
 
     QTNode *node = malloc(sizeof(QTNode));
     if (node == NULL) {
@@ -224,8 +224,9 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
     int row, col;
     int height, width;
 
-    if ((fscanf(fp, " %c %hhu %d %d %d %d", &node_type, &intensity, &row, &height, &col, &width)) != 6) {
+    if ((fscanf(fp, " %c %hhu %d %d %d %d ", &node_type, &intensity, &row, &height, &col, &width)) != 6) {
         // printf("load_preorder_qt_read_line(): fscanf error or end of file has been reached.\n");
+        free(node);
         return NULL;
     }
     
@@ -245,6 +246,16 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
         node->child2 = load_preorder_qt_read_line(fp);
         node->child3 = load_preorder_qt_read_line(fp);
         node->child4 = load_preorder_qt_read_line(fp);
+    }
+    else if (node_type == 'N' && (height - row == 1)) {
+        node->child3 = node->child4 = NULL;
+        node->child1 = load_preorder_qt_read_line(fp);
+        node->child2 = load_preorder_qt_read_line(fp);
+    }
+    else if (node_type == 'N' && (width - col == 1)) {
+        node->child2 = node->child4 = NULL;
+        node->child1 = load_preorder_qt_read_line(fp);
+        node->child3 = load_preorder_qt_read_line(fp);
     }
 
     return node;
