@@ -148,11 +148,80 @@ unsigned char get_image_intensity(Image *image, unsigned int row, unsigned int c
 }
 
 unsigned int hide_message(char *message, char *input_filename, char *output_filename) {
-    unsigned int counter = 0;
-    (void)message;
-    (void)input_filename;
-    (void)output_filename;
-    return counter;
+    if (!check_file_exists(input_filename)) {
+        printf("hide_message(): input_filename does not exist.\n");
+        return '\0';
+    }
+
+    Image *image = load_image(input_filename);
+
+    int width = get_image_width(image);
+    int height = get_image_height(image);
+    int max_intensity = image->max_intensity;
+    int size = width * height;
+
+    int image_max_encodable_msg_chars = size / 8;
+    // Includes null byte ('\0').
+    int msg_chars_to_encode = strlen(message) + 1;
+    int total_encodable_msg_chars = (msg_chars_to_encode > image_max_encodable_msg_chars) ? image_max_encodable_msg_chars : msg_chars_to_encode;
+    
+    FILE *fp = fopen(output_filename, "w");
+
+    // 8-bit ASCII code for the null byte - 00000000 (aka NUL)
+
+    fprintf(fp, "P3\n%u %u\n%u\n", width, height, max_intensity);
+
+    int counter = total_encodable_msg_chars;
+    int pixel_index = 0;
+    int msg_char_index = 0;
+
+    while (counter > 0) {
+        unsigned char pixel[8];
+        for (unsigned short i = 0; i < 8; i++) {
+            pixel[i] = get_pixel_from_row_major_index(image, pixel_index++);
+        }
+
+        unsigned char character = (counter == 1) ? '\0' : (unsigned char) message[msg_char_index];
+
+        for (unsigned short i = 0; i < 8; i++) {
+            unsigned char bit = (character >> (7 - i)) & 1;
+            unsigned char new_pixel = (pixel[i] & ~1) | bit;
+            fprintf(fp, "%hhu %hhu %hhu\n", new_pixel, new_pixel, new_pixel);
+        }
+
+
+        msg_char_index++;
+        counter--;
+    }
+
+    while (pixel_index < size) {
+        unsigned char remaining_pixel = get_pixel_from_row_major_index(image, pixel_index++);
+        fprintf(fp, "%hhu %hhu %hhu\n", remaining_pixel, remaining_pixel, remaining_pixel);
+    }
+
+
+    delete_image(image);
+    fclose(fp);
+    return total_encodable_msg_chars - 1;
+}
+
+unsigned char get_pixel_from_row_major_index(Image *image, int index) {
+    int width = get_image_width(image);
+    int height = get_image_height(image);
+    int size = width * height;
+
+    if (index >= size) {
+        printf("get_pixel_from_row_major_index(): index too big.\n");
+        return 0;
+    }
+
+    // Row-major indexing: index = (row * width) + col
+
+    int row = (index / width);
+    int col = (index % width);
+
+    // Returns 'image->raster[row][col].red'. Does not matter because our images are grayscale so RGB all have same value.
+    return image->raster[row][col].red;
 }
 
 char *reveal_message(char *input_filename) {
@@ -160,7 +229,7 @@ char *reveal_message(char *input_filename) {
         printf("reveal_message(): input_filename does not exist.\n");
         return '\0';
     }
-    
+
     Image *img = load_image(input_filename);
     int size = (get_image_width(img)) * (get_image_height(img));
     delete_image(img);
@@ -188,7 +257,7 @@ char *reveal_message(char *input_filename) {
         char ch = 0;
 
         for (unsigned short i = 0; i < 8; i++) {
-            unsigned char lsb = pixel[i] & 1;
+            unsigned char lsb = pixel[i] | 1;
             ch |= (lsb << i);
         }
 

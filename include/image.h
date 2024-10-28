@@ -42,5 +42,6 @@ void reveal_image(char *input_filename, char *output_filename);
 char *get_file_extension(char *filename);
 bool check_file_exists(char *filename);
 void file_skip_comments(FILE *fp);
+unsigned char get_pixel_from_row_major_index(Image *image, int index);
 
 #endif // __IMAGE_H
