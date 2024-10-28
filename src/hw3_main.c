@@ -4,12 +4,14 @@
 #include "tests_utils.h"
 
 // test case flags
-bool test_load_image = false; // passing valgrind (10/24)
-bool test_rmse = false;       // passing valgrind (10/24)
-bool test_create_quadtree = false; // passing valgrind and codegrade (10/25)
-bool test_preorder_qt = true;
-bool test_save_preorder_qt = false; // passing valgrind and codegrade (10/25)
+bool test_load_image = false;        // passing valgrind (10/24)
+bool test_rmse = false;              // passing valgrind (10/24)
+bool test_create_quadtree = false;   // passing valgrind and codegrade (10/25)
+bool test_load_preorder_qt = false;        // passing valgrind and codegrade (10/28)   
+bool test_save_preorder_qt = false;  // passing valgrind and codegrade (10/25)
 bool test_save_qtree_as_ppm = false;
+bool test_hide_reveal_msg = false;
+bool test_hide_reveal_img = true;
 
 int main() {
     struct stat st;
@@ -84,7 +86,7 @@ int main() {
 
     /******************************* common *******************************/
     double max_rmse = 25;
-    Image *image = load_image("images/building1.ppm");
+    Image *image = load_image("images/tiny.ppm");
     QTNode *root = create_quadtree(image, max_rmse);
     delete_image(image);
     delete_quadtree(root);
@@ -107,7 +109,7 @@ int main() {
     }
 
     /******************************* load_preorder_qt *******************************/
-    if (test_preorder_qt) {
+    if (test_load_preorder_qt) {
         printf("***** Start load_preorder_qt unit test(s)... *****\n\n");
 
         for (unsigned short i = 0; i < filenames_len; i++) {
@@ -169,15 +171,27 @@ int main() {
     }
 
     /******************************* hide_message and reveal_message *******************************/
-    prepare_input_image_file("wolfie-tiny.ppm");
-    hide_message("0000000000111111111122222222223333333333", "images/wolfie-tiny.ppm", "tests/output/hide_message1.ppm");
-    char *message = reveal_message("tests/output/hide_message1.ppm");
-    printf("Message: %s\n", message);
-    free(message);
+    if (test_hide_reveal_msg) {
+        prepare_input_image_file("wolfie-tiny.ppm");
+        hide_message("0000000000111111111122222222223333333333", "images/wolfie-tiny.ppm", "tests/output/hide_message1.ppm");
+        char *message = reveal_message("tests/output/hide_message1.ppm");
+        // char *message = reveal_message("images/smileyface.ppm");
+        printf("Message: %s\n", message);
+        free(message);
+    }
 
     /******************************* hide_image and reveal_image *******************************/
-    hide_image("images/wolfie-tiny.ppm", "images/building1.ppm", "tests/output/hide_image1.ppm");
-    reveal_image("tests/output/hide_image1.ppm", "tests/output/reveal_image1.ppm");
+    if (test_hide_reveal_img) {
+        // hide_image("images/wolfie-tiny.ppm", "images/building1.ppm", "tests/output/hide_image1.ppm");
+        // reveal_image("tests/output/hide_image1.ppm", "tests/output/reveal_image1.ppm");
+        // hide_image("images/eagle.ppm", "images/mascot.ppm", "tests/output/hide_image1.ppm");
+        // reveal_image("tests/output/hide_image1.ppm", "tests/output/reveal_image1.ppm");
+        // if (hide_image("images/eagle.ppm", "images/building1.ppm", "tests/output/hide_image11.ppm") == 1) {
+        //     reveal_image("tests/output/hide_image1.ppm", "tests/output/reveal_image1.ppm");
+        // }
+        hide_image("images/eagle.ppm", "images/building1.ppm", "tests/output/hide_image11.ppm");
+        reveal_image("tests/output/hide_image11.ppm", "tests/output/reveal_image1.ppm");
+    }
 
     return 0;
 }
@@ -281,13 +295,13 @@ bool compare_files(const char *file1, const char *file2) {
 
     fp1 = fopen(file1, "r");
     if (fp1 == NULL) {
-        printf("Error opening file %s\n", file1);
+        printf("compare_files(): Error opening file %s\n", file1);
         return false;
     }
 
     fp2 = fopen(file2, "r");
     if (fp2 == NULL) {
-        printf("Error opening file %s\n", file2);
+        printf("compare_files(): Error opening file %s\n", file2);
         fclose(fp1);
         return false;
     }

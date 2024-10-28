@@ -15,3 +15,5 @@ void prepare_input_image_file(char *image_filename);
 // my functions
 void run_load_image_unit_test(char *filename, short i);
 void run_rmse_unit_test(char *filename, short i);
+bool run_load_preorder_unit_test(char *filename, int i);
+bool compare_files(const char *file1, const char *file2);
