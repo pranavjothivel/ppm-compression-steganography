@@ -177,13 +177,13 @@ unsigned int hide_message(char *message, char *input_filename, char *output_file
 
     while (counter > 0) {
         unsigned char pixel[8];
-        for (unsigned short i = 0; i < 8; i++) {
+        for (int i = 0; i < 8; i++) {
             pixel[i] = get_pixel_from_row_major_index(image, pixel_index++);
         }
 
         unsigned char character = (counter == 1) ? '\0' : (unsigned char) message[msg_char_index];
 
-        for (unsigned short i = 0; i < 8; i++) {
+        for (int i = 0; i < 8; i++) {
             unsigned char bit = (character >> (7 - i)) & 1;
             unsigned char new_pixel = (pixel[i] & ~1) | bit;
             fprintf(fp, "%hhu %hhu %hhu\n", new_pixel, new_pixel, new_pixel);
@@ -210,7 +210,7 @@ unsigned char get_pixel_from_row_major_index(Image *image, int index) {
     int size = width * height;
 
     if (index >= size) {
-        printf("get_pixel_from_row_major_index(): Index is too big.\n");
+        printf("get_pixel_from_row_major_index(): Index %u is too big.\n", index);
         return 0;
     }
 
@@ -248,11 +248,11 @@ char *reveal_message(char *input_filename) {
         char character = '\0';
         unsigned char pixel[8];
 
-        for (unsigned short i = 0; i < 8; i++) {
+        for (int i = 0; i < 8; i++) {
             pixel[i] = get_pixel_from_row_major_index(image, pixel_index++);
         }
 
-        for (unsigned short i = 0; i < 8; i++) {
+        for (int i = 0; i < 8; i++) {
             char bit = pixel[i] & 1;
             character = character | (bit << (7 - i));
         }
@@ -287,19 +287,58 @@ unsigned int hide_image(char *secret_image_filename, char *input_filename, char 
     fprintf(fp, "%u %u\n", input_image->width, input_image->height);
     fprintf(fp, "%u\n", input_image->max_intensity);
 
+    int secret_image_total_pixels = get_image_width(secret_image) * get_image_height(secret_image);
     int input_image_total_pixels = get_image_width(input_image) * get_image_height(input_image);
-    int secret_image_total_pixels_needed = 16 + (8 * (get_image_width(secret_image) * get_image_height(secret_image)));
-    
-    // REMOVE LATER: STORE PIXELS IN OUTPUT IN ROW-MAJOR ORDER
+    int secret_image_total_pixels_needed = 16 + (8 * secret_image_total_pixels);
 
     if (secret_image_total_pixels_needed > input_image_total_pixels) {
+        printf("hide_image(): Input image to small to encode secret image.\n");
+        delete_image(secret_image);
+        delete_image(input_image);
         return 0;
     }
 
-    int pixel_index = 0;
-    int secret_pixels_to_encode = secret_image_total_pixels_needed;
-    (void)pixel_index;
-    (void)secret_pixels_to_encode;
+    int secret_pixel_index = 0;
+    int input_pixel_index = 0;
+
+    // encode width
+    for (int i = 0; i < 8; i++) {
+        int secret_pixel_width = get_image_width(secret_image);
+        unsigned char input_pixel = get_pixel_from_row_major_index(input_image, input_pixel_index++);
+
+        unsigned char bit = (secret_pixel_width >> (7 - i)) & 1;
+        unsigned char new_pixel = (input_pixel & ~1) | bit;
+        fprintf(fp, "%hhu %hhu %hhu\n", new_pixel, new_pixel, new_pixel);
+    }
+
+    // encode height
+    for (int i = 0; i < 8; i++) {
+        int secret_pixel_height = get_image_height(secret_image);
+        unsigned char input_pixel = get_pixel_from_row_major_index(input_image, input_pixel_index++);
+
+        unsigned char bit = (secret_pixel_height >> (7 - i)) & 1;
+        unsigned char new_pixel = (input_pixel & ~1) | bit;
+        fprintf(fp, "%hhu %hhu %hhu\n", new_pixel, new_pixel, new_pixel);
+    }
+
+    // encode remaining secret pixels
+    for (int i = 0; i < secret_image_total_pixels; i++) {
+        unsigned char pixel_to_encode = get_pixel_from_row_major_index(secret_image, secret_pixel_index++);
+
+        for (int j = 0; j < 8; j++) {
+            unsigned char input_pixel = get_pixel_from_row_major_index(input_image, input_pixel_index++);
+            
+            unsigned char bit = (pixel_to_encode >> (7 - j)) & 1;
+            unsigned char new_pixel = (input_pixel & ~1) | bit;
+            fprintf(fp, "%hhu %hhu %hhu\n", new_pixel, new_pixel, new_pixel);
+        }
+    }
+
+    // print remaining pixels from 'input_image' that were not encoded with secret pixels
+    while (input_pixel_index < input_image_total_pixels) {
+        unsigned char pixel = get_pixel_from_row_major_index(input_image, input_pixel_index++);
+        fprintf(fp, "%hhu %hhu %hhu\n", pixel, pixel, pixel);
+    }
 
     delete_image(secret_image);
     delete_image(input_image);
