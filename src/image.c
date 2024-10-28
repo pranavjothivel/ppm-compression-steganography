@@ -327,7 +327,7 @@ unsigned int hide_image(char *secret_image_filename, char *input_filename, char 
 
         for (int j = 0; j < 8; j++) {
             unsigned char input_pixel = get_pixel_from_row_major_index(input_image, input_pixel_index++);
-            
+
             unsigned char bit = (pixel_to_encode >> (7 - j)) & 1;
             unsigned char new_pixel = (input_pixel & ~1) | bit;
             fprintf(fp, "%hhu %hhu %hhu\n", new_pixel, new_pixel, new_pixel);
@@ -348,6 +348,17 @@ unsigned int hide_image(char *secret_image_filename, char *input_filename, char 
 }
 
 void reveal_image(char *input_filename, char *output_filename) {
-    (void)input_filename;
-    (void)output_filename;
+    if (!check_file_exists(input_filename)) {
+        printf("reveal_image(): input file name does not exist.\n");
+        return;
+    }
+    FILE *fp_input = fopen(input_filename, "r");
+    FILE *fp_output = fopen(output_filename, "w");
+    Image *input_image = load_image(input_filename);
+
+    
+
+    fclose(fp_input);
+    fclose(fp_output);
+    delete_image(input_image);
 }
