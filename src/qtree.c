@@ -228,15 +228,6 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
 
     fscanf(fp, " %hhu %d %d %d %d\n", &intensity, &row, &height, &col, &width);
 
-    // if ((fscanf(fp, " %hhu %d %d %d %d\n", &intensity, &row, &height, &col, &width)) != 5) {
-    //     printf("load_preorder_qt_read_line(): fscanf failed.\n");
-    //     return NULL;
-    // }
-
-    // if ((fscanf(fp, " %c %hhu %d %d %d %d\n", &node_type, &intensity, &row, &height, &col, &width)) != 6) {
-    //     printf("load_preorder_qt_read_line(): fscanf failed.\n");
-    //     return NULL;
-    // }
     QTNode *node = malloc(sizeof(QTNode));
     if (node == NULL) {
         printf("load_preorder_qt_read_line(): malloc failed.\n");
@@ -250,27 +241,6 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
     node->width = width;
 
     node->child1 = node->child2 = node->child3 = node->child4 = NULL;
-
-    // if (node_type == 'L') {
-    //     return node;
-    // }
-    // else if (node_type == 'N' && (height - row == 1)) {
-    //     node->child1 = load_preorder_qt_read_line(fp);
-    //     node->child2 = load_preorder_qt_read_line(fp);
-    // }
-    // else if (node_type == 'N' && (width - col == 1)) {
-    //     node->child1 = load_preorder_qt_read_line(fp);
-    //     node->child3 = load_preorder_qt_read_line(fp);
-    // }
-    // else if (node_type == 'N' && (height - row == 1) && (width - col == 1)) {
-    //     return node;
-    // }
-    // else if (node_type == 'N' && ((height - row) != 1) && ((width - col) != 1)) {
-    //     node->child1 = load_preorder_qt_read_line(fp);
-    //     node->child2 = load_preorder_qt_read_line(fp);
-    //     node->child3 = load_preorder_qt_read_line(fp);
-    //     node->child4 = load_preorder_qt_read_line(fp);
-    // }
 
     if (node_type == 'L') {
         return node;
