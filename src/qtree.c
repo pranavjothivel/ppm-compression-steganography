@@ -218,15 +218,7 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
     int row, col;
     int height, width;
 
-    int chr = fgetc(fp);
-    if (chr == EOF) {
-        printf("load_preorder_qt_read_line(): fgetc EOF reached.\n");
-        return NULL;
-    }
-
-    node_type = (char) chr;
-
-    fscanf(fp, " %hhu %d %d %d %d\n", &intensity, &row, &height, &col, &width);
+    fscanf(fp, " %c %hhu %d %d %d %d\n", &node_type, &intensity, &row, &height, &col, &width);
 
     QTNode *node = malloc(sizeof(QTNode));
     if (node == NULL) {
