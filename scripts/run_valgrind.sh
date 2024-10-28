@@ -49,10 +49,10 @@ rm -f "$valgrind_output" # Clean up the temporary file
 
 # Conditionally clean up test output directory
 if [ "$KEEP_OUTPUT" = false ]; then
-    printf "INFO: Removing tests/output/ directory...\n"
+    printf "INFO: REMOVING tests/output/ directory...\n"
     rm -rf tests/output/
 else
-    printf "INFO: Skipping removal of tests/output/ directory.\n"
+    printf "INFO: SKIPPING removal of tests/output/ directory.\n"
 fi
 
 printf "INFO: Removing vgcore.* files...\n"
