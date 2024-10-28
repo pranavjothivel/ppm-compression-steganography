@@ -281,22 +281,30 @@ unsigned int hide_image(char *secret_image_filename, char *input_filename, char 
 
     Image *secret_image = load_image(secret_image_filename);
     Image *input_image = load_image(input_filename);
-    FILE *fp = fopen(output_filename, "w");
 
-    fprintf(fp, "P3\n");
-    fprintf(fp, "%u %u\n", input_image->width, input_image->height);
-    fprintf(fp, "%u\n", input_image->max_intensity);
+    if (!secret_image || !input_image) {
+        printf("hide_image(): Failed to load images.\n");
+        delete_image(secret_image);
+        delete_image(input_image);
+        return 10;
+    }
 
     int secret_image_total_pixels = get_image_width(secret_image) * get_image_height(secret_image);
     int input_image_total_pixels = get_image_width(input_image) * get_image_height(input_image);
     int secret_image_total_pixels_needed = 16 + (8 * secret_image_total_pixels);
 
     if (secret_image_total_pixels_needed > input_image_total_pixels) {
-        printf("hide_image(): Input image to small to encode secret image.\n");
+        printf("hide_image(): Input image too small to encode secret image.\n");
         delete_image(secret_image);
         delete_image(input_image);
         return 0;
     }
+
+    FILE *fp = fopen(output_filename, "w");
+
+    fprintf(fp, "P3\n");
+    fprintf(fp, "%u %u\n", input_image->width, input_image->height);
+    fprintf(fp, "%u\n", input_image->max_intensity);
 
     int secret_pixel_index = 0;
     int input_pixel_index = 0;
@@ -349,16 +357,58 @@ unsigned int hide_image(char *secret_image_filename, char *input_filename, char 
 
 void reveal_image(char *input_filename, char *output_filename) {
     if (!check_file_exists(input_filename)) {
-        printf("reveal_image(): input file name does not exist.\n");
+        printf("reveal_image(): Input file name does not exist.\n");
         return;
     }
-    FILE *fp_input = fopen(input_filename, "r");
-    FILE *fp_output = fopen(output_filename, "w");
     Image *input_image = load_image(input_filename);
+    FILE *fp_output = fopen(output_filename, "w");
 
-    
+    if (!input_image || !input_image->raster) {
+        printf("reveal_image(): input image did not load properly.\n");
+        return;
+    }
 
-    fclose(fp_input);
+    int input_pixel_index = 0;
+
+    int secret_image_width = 0;
+    int secret_image_height = 0;
+    int secret_image_size = 0;
+
+    // decode width
+    for (int i = 0; i < 8; i++) {
+        unsigned char input_pixel = get_pixel_from_row_major_index(input_image, input_pixel_index++);
+        char bit = input_pixel & 1;
+        secret_image_width = secret_image_width | (bit << (7 - i));
+    }
+
+    // decode height
+    for (int i = 0; i < 8; i++) {
+        unsigned char input_pixel = get_pixel_from_row_major_index(input_image, input_pixel_index++);
+        char bit = input_pixel & 1;
+        secret_image_height = secret_image_height | (bit << (7 - i));
+    }
+
+    fprintf(fp_output, "P3\n");
+    fprintf(fp_output, "%u %u\n", secret_image_width, secret_image_height);
+    fprintf(fp_output, "%u\n", input_image->max_intensity);
+
+    secret_image_size = secret_image_width * secret_image_height;
+
+    // decode pixels
+    for (int i = 0; i < secret_image_size; i++) {
+        unsigned char decoded_secret_pixel = 0;
+
+        for (int j = 0; j < 8; j++) {
+            unsigned char pixel_to_decode = get_pixel_from_row_major_index(input_image, input_pixel_index++);
+            char bit = pixel_to_decode & 1;
+            decoded_secret_pixel = decoded_secret_pixel | (bit << (7 - j));
+        }
+        fprintf(fp_output, "%hhu %hhu %hhu\n", decoded_secret_pixel, decoded_secret_pixel, decoded_secret_pixel);
+
+    }
+
+    // done - don't need the non-encoded pixels from input image
+
     fclose(fp_output);
     delete_image(input_image);
 }
