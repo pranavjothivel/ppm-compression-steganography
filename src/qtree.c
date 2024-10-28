@@ -208,10 +208,10 @@ QTNode *load_preorder_qt(char *filename) {
 }
 
 QTNode *load_preorder_qt_read_line(FILE *fp) {
-    // if (feof(fp)) {
-    //     printf("load_preorder_qt_read_line(): EOF reached.\n");
-    //     return NULL;
-    // }
+    if (feof(fp)) {
+        printf("load_preorder_qt_read_line(): EOF reached.\n");
+        return NULL;
+    }
 
     char node_type;
     unsigned char intensity;
@@ -220,7 +220,7 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
 
     int chr = fgetc(fp);
     if (chr == EOF) {
-        // printf("load_preorder_qt_read_line(): fgetc EOF reached.\n");
+        printf("load_preorder_qt_read_line(): fgetc EOF reached.\n");
         return NULL;
     }
 
