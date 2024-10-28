@@ -210,7 +210,7 @@ unsigned char get_pixel_from_row_major_index(Image *image, int index) {
     int size = width * height;
 
     if (index >= size) {
-        printf("get_pixel_from_row_major_index(): index too big.\n");
+        printf("get_pixel_from_row_major_index(): Index is too big.\n");
         return 0;
     }
 
@@ -298,7 +298,8 @@ unsigned int hide_image(char *secret_image_filename, char *input_filename, char 
 
     int pixel_index = 0;
     int secret_pixels_to_encode = secret_image_total_pixels_needed;
-    
+    (void)pixel_index;
+    (void)secret_pixels_to_encode;
 
     delete_image(secret_image);
     delete_image(input_image);
