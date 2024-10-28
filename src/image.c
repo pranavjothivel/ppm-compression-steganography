@@ -171,7 +171,7 @@ char *reveal_message(char *input_filename) {
 
     unsigned int i1, i2;
     unsigned char temp_buffer;
-    
+
     file_skip_comments(fp);
     fscanf(fp, "%u %u", &i1, &i2);
 
@@ -193,6 +193,10 @@ char *reveal_message(char *input_filename) {
 
         // strncat(message, ch_as_str, sizeof(ch_as_str));
         strcat(message, ch_as_str);
+
+        if (ch == '\0') {
+            break;
+        }
     }
 
     fclose(fp);
