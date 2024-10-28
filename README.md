@@ -10,8 +10,8 @@ Pranav Jothivel
   - [x] Test 2: Average Intensity Calculation (No issue with Test 1, indicates this function is running as expected.)
   - [X] Test 3: Quadtree Creation Validity
   - [X] Test 4: Edge Case (1x1 Image)
-- [ ] Part 3 Implementation
-- [ ] Part 3 Unit Tests (incl. Memory Tests with Valgrind)
+- [x] Part 3 Implementation
+- [x] Part 3 Unit Tests (incl. Memory Tests with Valgrind)
 
 ## AutoTest
 - [x] load_image and delete_image tests
@@ -22,7 +22,7 @@ Pranav Jothivel
 - [x] unit_tests_hide_message tests
 - [x] unit_tests_reveal_message tests
 - [x] unit_tests_hide_image tests
-- [ ] unit_tests_reveal_image tests
+- [x] unit_tests_reveal_image tests
 - [x] unit_tests_memory tests
 
 ## Running Valgrind
@@ -33,7 +33,5 @@ valgrind --quiet -s --leak-check=full --track-origins=yes --trace-children=yes -
 ## Running Test Suite (using script)
 ```
 chmod +X ./build/run_valgrind.sh
-```
-```
 ./build/run_valgrind.sh --keep-output
 ```
