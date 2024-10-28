@@ -157,6 +157,10 @@ unsigned int hide_message(char *message, char *input_filename, char *output_file
 
 char *reveal_message(char *input_filename) {
     Image *img = load_image(input_filename);
+    if (!check_file_exists(input_filename)) {
+        printf("reveal_message(): input_filename does not exist.\n");
+        return '\0';
+    }
     int size = (get_image_width(img)) * (get_image_height(img));
     delete_image(img);
 
