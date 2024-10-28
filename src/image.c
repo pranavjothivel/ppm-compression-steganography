@@ -189,7 +189,6 @@ unsigned int hide_message(char *message, char *input_filename, char *output_file
             fprintf(fp, "%hhu %hhu %hhu\n", new_pixel, new_pixel, new_pixel);
         }
 
-
         msg_char_index++;
         counter--;
     }
@@ -199,9 +198,9 @@ unsigned int hide_message(char *message, char *input_filename, char *output_file
         fprintf(fp, "%hhu %hhu %hhu\n", remaining_pixel, remaining_pixel, remaining_pixel);
     }
 
-
     delete_image(image);
     fclose(fp);
+
     return total_encodable_msg_chars - 1;
 }
 
@@ -271,10 +270,41 @@ char *reveal_message(char *input_filename) {
 }
 
 unsigned int hide_image(char *secret_image_filename, char *input_filename, char *output_filename) {
-    (void)secret_image_filename;
-    (void)input_filename;
-    (void)output_filename;
-    return 10;
+    if (!check_file_exists(secret_image_filename)) {
+        printf("hide_image(): secret_image_filename does not exist.\n");
+        return 10;
+    }
+    if (!check_file_exists(input_filename)) {
+        printf("hide_image(): input_filename does not exist.\n");
+        return 10;
+    }
+
+    Image *secret_image = load_image(secret_image_filename);
+    Image *input_image = load_image(input_filename);
+    FILE *fp = fopen(output_filename, "w");
+
+    fprintf(fp, "P3\n");
+    fprintf(fp, "%u %u\n", input_image->width, input_image->height);
+    fprintf(fp, "%u\n", input_image->max_intensity);
+
+    int input_image_total_pixels = get_image_width(input_image) * get_image_height(input_image);
+    int secret_image_total_pixels_needed = 16 + (8 * (get_image_width(secret_image) * get_image_height(secret_image)));
+    
+    // REMOVE LATER: STORE PIXELS IN OUTPUT IN ROW-MAJOR ORDER
+
+    if (secret_image_total_pixels_needed > input_image_total_pixels) {
+        return 0;
+    }
+
+    int pixel_index = 0;
+    int secret_pixels_to_encode = secret_image_total_pixels_needed;
+    
+
+    delete_image(secret_image);
+    delete_image(input_image);
+    fclose(fp);
+
+    return 1;
 }
 
 void reveal_image(char *input_filename, char *output_filename) {
