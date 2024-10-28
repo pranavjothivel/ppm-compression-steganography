@@ -3,11 +3,11 @@
 Image *load_image(char *filename) {
     char *ext = get_file_extension(filename);
     if (ext == NULL || strcmp(ext, "ppm") != 0) {
-        printf("load_image(): File provided does not have .ppm extension... ");
+        printf("load_image(): File provided does not have .ppm extension...\n");
         return NULL;
     }
     if (!check_file_exists(filename)) {
-        printf("load_image(): Filename is null or does not exist... ");
+        printf("load_image(): Filename is null or does not exist...\n");
         return NULL;
     }
 
@@ -25,7 +25,7 @@ Image *load_image(char *filename) {
 
     if (strcmp(magic_number, "P3") != 0) {
         fclose(fp);
-        printf("load_image(): Missing magic number of P3...");
+        printf("load_image(): Missing magic number of P3...\n");
         return NULL;
     }
 
@@ -97,7 +97,7 @@ void file_skip_comments(FILE *fp) {
 
 void delete_image(Image *image) {
     if (image == NULL) {
-        printf("delete_image(): Image is null. ");
+        printf("delete_image(): Image is null.\n");
         return;
     }
     for (unsigned int i = 0; i < image->height; i++) {
@@ -112,7 +112,7 @@ void delete_image(Image *image) {
 
 unsigned short get_image_width(Image *image) {
     if (image == NULL) {
-        printf("get_image_width(): Invalid image pointer. ");
+        printf("get_image_width(): Invalid image pointer.\n");
         return 0;
     }
     return image->width;
@@ -120,7 +120,7 @@ unsigned short get_image_width(Image *image) {
 
 unsigned short get_image_height(Image *image) {
     if (image == NULL) {
-        printf("get_image_width(): Invalid image pointer. ");
+        printf("get_image_width(): Invalid image pointer.\n");
         return 0;
     }
     return image->height;
@@ -132,15 +132,15 @@ unsigned char get_image_intensity(Image *image, unsigned int row, unsigned int c
     //     return 0;
     // }
     if (image == NULL) {
-        printf("get_image_intensity(): Image is null. ");
+        printf("get_image_intensity(): Image is null.\n");
         return 0;
     }
     if (row >= image->height) {
-        printf("get_image_intensity(): Row is out of bounds. ");
+        printf("get_image_intensity(): Row is out of bounds.\n");
         return 0;
     }
     if (col >= image->width) {
-        printf("get_image_intensity(): Col is out of bounds. ");
+        printf("get_image_intensity(): Col is out of bounds.\n");
         return 0;
     }
     unsigned char intensity = image->raster[row][col].red;
@@ -156,11 +156,12 @@ unsigned int hide_message(char *message, char *input_filename, char *output_file
 }
 
 char *reveal_message(char *input_filename) {
-    Image *img = load_image(input_filename);
     if (!check_file_exists(input_filename)) {
         printf("reveal_message(): input_filename does not exist.\n");
         return '\0';
     }
+    
+    Image *img = load_image(input_filename);
     int size = (get_image_width(img)) * (get_image_height(img));
     delete_image(img);
 
