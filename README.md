@@ -29,3 +29,11 @@ Pranav Jothivel
 ```
 valgrind --quiet -s --leak-check=full --track-origins=yes --trace-children=yes --error-exitcode=37 ./build/hw3_main
 ```
+
+## Running Test Suite (using script)
+```
+chmod +X ./build/run_valgrind.sh
+```
+```
+./build/run_valgrind.sh --keep-output
+```
