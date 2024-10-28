@@ -238,10 +238,8 @@ QTNode *load_preorder_qt_read_line(FILE *fp) {
         return node;
     }
     else if (node_type == 'N') {
-        if ((height == 1) && (width == 1)) {
-            return node;
-        } 
-        else if ((height == 1)) {
+        // internal node will never have height = 1 and width = 1
+        if ((height == 1)) {
             node->child1 = load_preorder_qt_read_line(fp);
             node->child2 = load_preorder_qt_read_line(fp);
         } 
