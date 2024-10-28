@@ -20,7 +20,7 @@ Pranav Jothivel
 - [ ] unit_tests_load_preorder_qt tests
 - [x] unit_tests_save_preorder_qt tests
 - [x] unit_tests_save_qtree_as_ppm tests
-- [ ] unit_tests_hide_message tests
+- [x] unit_tests_hide_message tests
 - [ ] unit_tests_reveal_message tests
 - [ ] unit_tests_hide_image tests
 - [ ] unit_tests_reveal_image tests
