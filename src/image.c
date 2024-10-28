@@ -227,54 +227,46 @@ unsigned char get_pixel_from_row_major_index(Image *image, int index) {
 char *reveal_message(char *input_filename) {
     if (!check_file_exists(input_filename)) {
         printf("reveal_message(): input_filename does not exist.\n");
-        return '\0';
+        return NULL;
     }
 
-    Image *img = load_image(input_filename);
-    int size = (get_image_width(img)) * (get_image_height(img));
-    delete_image(img);
+    Image *image = load_image(input_filename);
+    if (!image) {
+        printf("reveal_message(): Error with image creation.\n");
+        return NULL;
+    }
 
-    char *message = malloc((8 * size) + 1);
+    int width = get_image_width(image);
+    int height = get_image_height(image);
+    int size = width * height;
+
+    int pixel_index = 0;
+
+    char *message = malloc((size / 8));
     message[0] = '\0';
-
-    FILE *fp = fopen(input_filename, "r");
-
-    // remember: null terminator 
-    char magic_number[3];
-    fscanf(fp, "%2s", magic_number);
-
-    unsigned int i1, i2;
-    unsigned char temp_buffer;
-
-    file_skip_comments(fp);
-    fscanf(fp, "%u %u", &i1, &i2);
-
-    file_skip_comments(fp);
-    fscanf(fp, "%hhu", &temp_buffer);
-
-    unsigned char pixel[8];
-    while ((fscanf(fp, "%hhu %hhu %hhu %hhu %hhu %hhu %hhu %hhu", &pixel[0], &pixel[1], &pixel[2], &pixel[3], &pixel[4], &pixel[5], &pixel[6], &pixel[7])) == 8) {
-        char ch = 0;
+    
+    while (pixel_index < size) {
+        char character = '\0';
+        unsigned char pixel[8];
 
         for (unsigned short i = 0; i < 8; i++) {
-            unsigned char lsb = pixel[i] | 1;
-            ch |= (lsb << i);
+            pixel[i] = get_pixel_from_row_major_index(image, pixel_index++);
         }
 
-        char ch_as_str[2];
-        ch_as_str[0] = ch;
-        ch_as_str[1] = '\0';
+        for (unsigned short i = 0; i < 8; i++) {
+            char bit = pixel[i] & 1;
+            character = character | (bit << (7 - i));
+        }
 
-        // strncat(message, ch_as_str, sizeof(ch_as_str));
-        strcat(message, ch_as_str);
+        char character_as_string[2] = {character, '\0'};
+        strncat(message, character_as_string, 2);
 
-        if (ch == '\0') {
+        if (character == '\0') {
             break;
         }
     }
 
-    fclose(fp);
-
+    delete_image(image);
     return message;
 }
 
