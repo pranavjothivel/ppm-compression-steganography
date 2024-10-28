@@ -7,11 +7,11 @@
 bool test_load_image = false;        // passing valgrind (10/24)
 bool test_rmse = false;              // passing valgrind (10/24)
 bool test_create_quadtree = false;   // passing valgrind and codegrade (10/25)
-bool test_load_preorder_qt = false;        // passing valgrind and codegrade (10/28)   
+bool test_load_preorder_qt = true;        // passing valgrind and codegrade (10/28)   
 bool test_save_preorder_qt = false;  // passing valgrind and codegrade (10/25)
 bool test_save_qtree_as_ppm = false;
 bool test_hide_reveal_msg = false;
-bool test_hide_reveal_img = true;
+bool test_hide_reveal_img = false;
 
 int main() {
     struct stat st;
@@ -184,13 +184,13 @@ int main() {
     if (test_hide_reveal_img) {
         // hide_image("images/wolfie-tiny.ppm", "images/building1.ppm", "tests/output/hide_image1.ppm");
         // reveal_image("tests/output/hide_image1.ppm", "tests/output/reveal_image1.ppm");
-        // hide_image("images/eagle.ppm", "images/mascot.ppm", "tests/output/hide_image1.ppm");
-        // reveal_image("tests/output/hide_image1.ppm", "tests/output/reveal_image1.ppm");
+        hide_image("images/eagle.ppm", "images/mascot.ppm", "tests/output/hide_image1.ppm");
+        reveal_image("tests/output/hide_image1.ppm", "tests/output/reveal_image1.ppm");
         // if (hide_image("images/eagle.ppm", "images/building1.ppm", "tests/output/hide_image11.ppm") == 1) {
         //     reveal_image("tests/output/hide_image1.ppm", "tests/output/reveal_image1.ppm");
         // }
-        hide_image("images/eagle.ppm", "images/building1.ppm", "tests/output/hide_image11.ppm");
-        reveal_image("tests/output/hide_image11.ppm", "tests/output/reveal_image1.ppm");
+        // hide_image("images/eagle.ppm", "images/building1.ppm", "tests/output/hide_image11.ppm");
+        // reveal_image("tests/output/hide_image11.ppm", "tests/output/reveal_image1.ppm");
     }
 
     return 0;
@@ -290,38 +290,46 @@ bool run_load_preorder_unit_test(char *filename, int i) {
 }
 
 bool compare_files(const char *file1, const char *file2) {
-    FILE *fp1, *fp2;
-    char ch1, ch2;
-
-    fp1 = fopen(file1, "r");
+    FILE *fp1 = fopen(file1, "r");
     if (fp1 == NULL) {
-        printf("compare_files(): Error opening file %s\n", file1);
+        perror("Error opening first file");
         return false;
     }
 
-    fp2 = fopen(file2, "r");
+    FILE *fp2 = fopen(file2, "r");
     if (fp2 == NULL) {
-        printf("compare_files(): Error opening file %s\n", file2);
+        perror("Error opening second file");
         fclose(fp1);
         return false;
     }
+
+    int ch1;
+    int ch2;
+    bool are_equal = true;
 
     while (true) {
         ch1 = fgetc(fp1);
         ch2 = fgetc(fp2);
 
         if (ch1 != ch2) {
-            fclose(fp1);
-            fclose(fp2);
-
-            return false;
+            are_equal = false;
+            break;
         }
 
-        if (ch1 == EOF) {
-            fclose(fp1);
-            fclose(fp2);
+        //if both reach EOF then files are identical
+        if (ch1 == EOF && ch2 == EOF) {
+            break;
+        }
 
-            return true;
+        // if one reaches EOF but the other does not then files are different
+        if (ch1 == EOF || ch2 == EOF) {
+            are_equal = false;
+            break;
         }
     }
+
+    fclose(fp1);
+    fclose(fp2);
+
+    return are_equal;
 }
