@@ -79,14 +79,14 @@ printf "INFO: Building the project...\n\n"
 cmake -S . -B build
 cmake --build build
 
-printf "INFO: Removing 'tests/output/' directory...\n"
-rm -rf tests/output/
-
 # Check if the build succeeded
 if [ $? -ne 0 ]; then
     printf "\n\nINFO: Build failed. Exiting.\n\n"
     exit 1
 fi
+
+printf "INFO: Removing 'tests/output/' directory...\n"
+rm -rf tests/output/
 
 # Check if Valgrind is enabled
 if [ "$USE_VALGRIND" = true ]; then
