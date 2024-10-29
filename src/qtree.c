@@ -321,8 +321,8 @@ bool is_leaf_node(QTNode *node) {
     return false;
 }
 
-void file_print_pixel_line(int value, FILE *fp) {
+void file_print_pixel_line(unsigned char value, FILE *fp) {
     char buffer[20];
-    snprintf(buffer, sizeof(buffer), "%d %d %d", value, value, value);
+    snprintf(buffer, sizeof(buffer), "%hhu %hhu %hhu", value, value, value);
     file_print_line(buffer, fp);
 }
