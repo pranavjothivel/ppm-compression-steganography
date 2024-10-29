@@ -36,6 +36,7 @@ void set_test_flags_from_env() {
 
 int main() {
     set_test_flags_from_env();
+
     struct stat st;
     if (stat("tests/output", &st) == -1)
         mkdir("tests/output", 0700);
@@ -117,6 +118,7 @@ int main() {
     
     if (test_create_quadtree) {
         printf("Creating quadtree...\n\n");
+        image = load_image("images/tiny.ppm");
         root = create_quadtree(image, max_rmse);
         printf("Done with quadtree...\n\n");
         // See tests/input/load_preorder_qt1_qtree.txt for the expected results
@@ -126,8 +128,8 @@ int main() {
             
             printf("***** End create_quadtree unit test(s)... *****\n\n");
         }
-        delete_quadtree(root);
         delete_image(image);
+        delete_quadtree(root);
     }
 
     /******************************* load_preorder_qt *******************************/
@@ -197,7 +199,6 @@ int main() {
         prepare_input_image_file("wolfie-tiny.ppm");
         hide_message("0000000000111111111122222222223333333333", "images/wolfie-tiny.ppm", "tests/output/hide_message1.ppm");
         char *message = reveal_message("tests/output/hide_message1.ppm");
-        // char *message = reveal_message("images/smileyface.ppm");
         printf("Message: %s\n", message);
         free(message);
     }
@@ -282,7 +283,7 @@ void run_rmse_unit_test(char *filename, short i) {
         unsigned int col = 0;
 
         unsigned char rmse = compute_rmse(image, row, col, image->height, image->width);
-        printf("RMSE is %hhu\n\n.", rmse);
+        printf("RMSE is %hhu.\n\n", rmse);
         delete_image(image);
     }
     else {
