@@ -288,9 +288,9 @@ unsigned int hide_image(char *secret_image_filename, char *input_filename, char 
 
     int secret_image_total_pixels = get_image_width(secret_image) * get_image_height(secret_image);
     int input_image_total_pixels = get_image_width(input_image) * get_image_height(input_image);
-    int secret_image_total_pixels_needed = 16 + (8 * secret_image_total_pixels);
+    int input_image_total_pixels_needed = 16 + (8 * secret_image_total_pixels);
 
-    if (secret_image_total_pixels_needed > input_image_total_pixels) {
+    if (input_image_total_pixels_needed > input_image_total_pixels) {
         printf("hide_image(): Input image too small to encode secret image.\n");
         delete_image(secret_image);
         delete_image(input_image);
@@ -300,7 +300,7 @@ unsigned int hide_image(char *secret_image_filename, char *input_filename, char 
     FILE *fp = fopen(output_filename, "w");
 
     fprintf(fp, "P3\n");
-    fprintf(fp, "%u %u\n", input_image->width, input_image->height);
+    fprintf(fp, "%u %u\n", get_image_width(input_image), get_image_height(input_image));
     fprintf(fp, "%u\n", input_image->max_intensity);
 
     int secret_pixel_index = 0;
