@@ -3,6 +3,7 @@
 # Initialize variables
 KEEP_OUTPUT=false
 RUN_ALL=true  # Default to running all tests if no specific test flags are passed
+USE_VALGRIND=true  # Default to using Valgrind
 TEST_FLAGS=""
 PROVIDED_FLAGS=()  # Array to store provided flags
 
@@ -54,6 +55,11 @@ for arg in "$@"; do
             PROVIDED_FLAGS+=("--test-hide-reveal-img")
             RUN_ALL=false
             ;;
+        --no-valgrind)
+            USE_VALGRIND=false
+            PROVIDED_FLAGS+=("--no-valgrind")
+            printf "INFO: Skipping Valgrind...\n"
+            ;;
     esac
 done
 
@@ -82,31 +88,35 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Run Valgrind with dynamically set test flags
-printf "\n\nINFO: Running Valgrind with unit test flags...\n\n"
-valgrind_output=$(mktemp) # Create a temporary file for Valgrind output
+# Check if Valgrind is enabled
+if [ "$USE_VALGRIND" = true ]; then
+    printf "\n\nINFO: Running Valgrind with unit test flags...\n\n"
+    valgrind_output=$(mktemp) # Create a temporary file for Valgrind output
 
-# Use Valgrind to execute the binary with the test flags passed as environment variables
-valgrind --quiet -s --leak-check=full --track-origins=yes --trace-children=yes \
-         --error-exitcode=37 env $TEST_FLAGS ./build/hw3_main &> "$valgrind_output"
+    # Use Valgrind to execute the binary with the test flags passed as environment variables
+    valgrind --quiet -s --leak-check=full --track-origins=yes --trace-children=yes \
+             --error-exitcode=37 env $TEST_FLAGS ./build/hw3_main &> "$valgrind_output"
 
-# Check if Valgrind found any issues
-if [ $? -eq 37 ]; then
-    printf "\nERROR: Valgrind detected memory issues:\n"
-    cat "$valgrind_output" # Show the full Valgrind output if there are issues
+    # Check if Valgrind found any issues
+    if [ $? -eq 37 ]; then
+        printf "\nERROR: Valgrind detected memory issues:\n"
+        cat "$valgrind_output" # Show the full Valgrind output if there are issues
+        rm -f "$valgrind_output" # Clean up the temporary file
+        exit 37
+    else
+        printf "\nINFO: Valgrind finished without issues.\n\n"
+    fi
     rm -f "$valgrind_output" # Clean up the temporary file
-    exit 37
 else
-    printf "\nINFO: Valgrind finished without issues.\n\n"
-    printf "**********************************************************\n"
-    printf "INFO: Running ./build/hw3_main...\n\n"
-    ./build/hw3_main
+    printf "\nINFO: Skipping Valgrind. Running the binary directly...\n"
 fi
+
+printf "**********************************************************\n"
+printf "INFO: Running ./build/hw3_main...\n\n"
+env $TEST_FLAGS ./build/hw3_main
 
 printf "\n*****************************************************\n"
 printf "INFO: ./build/hw3_main complete...\n"
-
-rm -f "$valgrind_output" # Clean up the temporary file
 
 # Conditionally clean up the tests/output directory
 if [ "$KEEP_OUTPUT" = false ]; then
