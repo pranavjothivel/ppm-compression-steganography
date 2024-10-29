@@ -216,8 +216,9 @@ unsigned char get_pixel_from_row_major_index(Image *image, int index) {
     int row = (index / width);
     int col = (index % width);
 
-    // Returns 'image->raster[row][col].red'. Does not matter because our images are grayscale so RGB all have same value.
-    return image->raster[row][col].red;
+    // // Returns 'image->raster[row][col].red'. Does not matter because our images are grayscale so RGB all have same value.
+    // return image->raster[row][col].red;
+    return get_image_intensity(image, row, col);
 }
 
 char *reveal_message(char *input_filename) {
