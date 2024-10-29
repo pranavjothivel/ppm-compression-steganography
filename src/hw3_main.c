@@ -3,17 +3,39 @@
 
 #include "tests_utils.h"
 
-// test case flags
-bool test_load_image = false;        // passing valgrind (10/24)
-bool test_rmse = false;              // passing valgrind (10/24)
-bool test_create_quadtree = false;   // passing valgrind and codegrade (10/25)
-bool test_load_preorder_qt = true;        // passing valgrind and codegrade (10/28)   
-bool test_save_preorder_qt = false;  // passing valgrind and codegrade (10/25)
+// // test case flags
+// bool test_load_image = false;        // passing valgrind (10/24)
+// bool test_rmse = false;              // passing valgrind (10/24)
+// bool test_create_quadtree = false;   // passing valgrind and codegrade (10/25)
+// bool test_load_preorder_qt = true;        // passing valgrind and codegrade (10/28)   
+// bool test_save_preorder_qt = false;  // passing valgrind and codegrade (10/25)
+// bool test_save_qtree_as_ppm = false;
+// bool test_hide_reveal_msg = false;
+// bool test_hide_reveal_img = false;
+
+// unit test flags (default to false) - used with run_valgrind shell script
+bool test_load_image = false;
+bool test_rmse = false;
+bool test_create_quadtree = false;
+bool test_load_preorder_qt = false;
+bool test_save_preorder_qt = false;
 bool test_save_qtree_as_ppm = false;
 bool test_hide_reveal_msg = false;
 bool test_hide_reveal_img = false;
 
+void set_test_flags_from_env() {
+    if (getenv("test_load_image")) test_load_image = true;
+    if (getenv("test_rmse")) test_rmse = true;
+    if (getenv("test_create_quadtree")) test_create_quadtree = true;
+    if (getenv("test_load_preorder_qt")) test_load_preorder_qt = true;
+    if (getenv("test_save_preorder_qt")) test_save_preorder_qt = true;
+    if (getenv("test_save_qtree_as_ppm")) test_save_qtree_as_ppm = true;
+    if (getenv("test_hide_reveal_msg")) test_hide_reveal_msg = true;
+    if (getenv("test_hide_reveal_img")) test_hide_reveal_img = true;
+}
+
 int main() {
+    set_test_flags_from_env();
     struct stat st;
     if (stat("tests/output", &st) == -1)
         mkdir("tests/output", 0700);
