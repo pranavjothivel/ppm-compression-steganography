@@ -38,7 +38,7 @@ To execute the test suite, follow these steps:
    chmod +x ./scripts/run_tests.sh
    ```
 
-2. Run the tests using the script. You can control whether Valgrind runs by passing the `--no-valgrind` flag. Here's an example:
+2. Run the tests using the script. Control whether Valgrind runs by passing the `--no-valgrind` flag. Here's an example:
    ```bash
    ./scripts/run_tests.sh --no-valgrind
    ```
