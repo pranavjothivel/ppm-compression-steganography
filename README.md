@@ -35,12 +35,12 @@ To execute the test suite, follow these steps:
 
 1. Ensure the script is executable:
    ```bash
-   chmod +x ./scripts/run_tests.sh
+   chmod +x ./tests/scripts/run_tests.sh
    ```
 
 2. Run the tests using the script. Control whether Valgrind runs by passing the `--no-valgrind` flag. Here's an example:
    ```bash
-   ./scripts/run_tests.sh --no-valgrind
+   ./tests/scripts/run_tests.sh --no-valgrind
    ```
 
 ### Script Flags  
@@ -59,10 +59,10 @@ To execute the test suite, follow these steps:
 ### Example Usage  
 To run the tests for `load_image` with Valgrind:
 ```bash
-./scripts/run_tests.sh --test-load-image 
+./tests/scripts/run_tests.sh --test-load-image 
 ```
 
 To skip Valgrind checks, run all tests, and keep the output directory:
 ```bash
-./scripts/run_tests.sh --no-valgrind --keep-output
+./tests/scripts/run_tests.sh --no-valgrind --keep-output
 ```
