@@ -127,10 +127,6 @@ unsigned short get_image_height(Image *image) {
 }
 
 unsigned char get_image_intensity(Image *image, unsigned int row, unsigned int col) {
-    // if (image == NULL || row >= image->height || col >= image->width) {
-    //     printf("get_image_intensity(): Image is null, or row is out of bounds, or col is out of bounds. ");
-    //     return 0;
-    // }
     if (image == NULL) {
         printf("get_image_intensity(): Image is null.\n");
         return 0;
@@ -143,6 +139,7 @@ unsigned char get_image_intensity(Image *image, unsigned int row, unsigned int c
         printf("get_image_intensity(): Col is out of bounds.\n");
         return 0;
     }
+
     unsigned char intensity = image->raster[row][col].red;
     return intensity;
 }
@@ -167,8 +164,6 @@ unsigned int hide_message(char *message, char *input_filename, char *output_file
     
     FILE *fp = fopen(output_filename, "w");
 
-    // 8-bit ASCII code for the null byte - 00000000 (aka NUL)
-
     fprintf(fp, "P3\n%u %u\n%u\n", width, height, max_intensity);
 
     int counter = total_encodable_msg_chars;
@@ -180,6 +175,8 @@ unsigned int hide_message(char *message, char *input_filename, char *output_file
         for (int i = 0; i < 8; i++) {
             pixel[i] = get_pixel_from_row_major_index(image, pixel_index++);
         }
+
+        // 8-bit ASCII code for the null byte - 00000000 (aka NUL)
 
         unsigned char character = (counter == 1) ? '\0' : (unsigned char) message[msg_char_index];
 
