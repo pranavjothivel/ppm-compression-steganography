@@ -286,8 +286,12 @@ unsigned int hide_image(char *secret_image_filename, char *input_filename, char 
         return 10;
     }
 
-    int secret_image_total_pixels = get_image_width(secret_image) * get_image_height(secret_image);
+    int secret_image_width = get_image_width(secret_image);
+    int secret_image_height = get_image_height(secret_image);
+
+    int secret_image_total_pixels = secret_image_width * secret_image_height;
     int input_image_total_pixels = get_image_width(input_image) * get_image_height(input_image);
+
     int input_image_total_pixels_needed = 16 + (8 * secret_image_total_pixels);
 
     if (input_image_total_pixels_needed > input_image_total_pixels) {
@@ -308,20 +312,18 @@ unsigned int hide_image(char *secret_image_filename, char *input_filename, char 
 
     // encode width
     for (int i = 0; i < 8; i++) {
-        int secret_pixel_width = get_image_width(secret_image);
         unsigned char input_pixel = get_pixel_from_row_major_index(input_image, input_pixel_index++);
 
-        unsigned char bit = (secret_pixel_width >> (7 - i)) & 1;
+        unsigned char bit = (secret_image_width >> (7 - i)) & 1;
         unsigned char new_pixel = (input_pixel & ~1) | bit;
         fprintf(fp, "%hhu %hhu %hhu\n", new_pixel, new_pixel, new_pixel);
     }
 
     // encode height
     for (int i = 0; i < 8; i++) {
-        int secret_pixel_height = get_image_height(secret_image);
         unsigned char input_pixel = get_pixel_from_row_major_index(input_image, input_pixel_index++);
 
-        unsigned char bit = (secret_pixel_height >> (7 - i)) & 1;
+        unsigned char bit = (secret_image_height >> (7 - i)) & 1;
         unsigned char new_pixel = (input_pixel & ~1) | bit;
         fprintf(fp, "%hhu %hhu %hhu\n", new_pixel, new_pixel, new_pixel);
     }
