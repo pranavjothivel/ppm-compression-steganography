@@ -402,8 +402,8 @@ void reveal_image(char *input_filename, char *output_filename) {
             char bit = pixel_to_decode & 1;
             decoded_secret_pixel = decoded_secret_pixel | (bit << (7 - j));
         }
+        
         fprintf(fp_output, "%hhu %hhu %hhu\n", decoded_secret_pixel, decoded_secret_pixel, decoded_secret_pixel);
-
     }
 
     // done - don't need the non-encoded pixels from input image
