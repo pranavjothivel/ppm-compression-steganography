@@ -32,6 +32,6 @@ valgrind --quiet -s --leak-check=full --track-origins=yes --trace-children=yes -
 
 ## Running Test Suite (using script)
 ```
-chmod +X ./build/run_valgrind.sh
-./build/run_valgrind.sh --keep-output
+chmod +X ./build/run_tests.sh
+./scripts/run_tests.sh --keep-output --no-valgrind
 ```
