@@ -292,9 +292,9 @@ unsigned int hide_image(char *secret_image_filename, char *input_filename, char 
     int secret_image_total_pixels = secret_image_width * secret_image_height;
     int input_image_total_pixels = get_image_width(input_image) * get_image_height(input_image);
 
-    int input_image_total_pixels_needed = 16 + (8 * secret_image_total_pixels);
+    int total_pixels_needed_in_input_image = 16 + (8 * secret_image_total_pixels);
 
-    if (input_image_total_pixels_needed > input_image_total_pixels) {
+    if (total_pixels_needed_in_input_image > input_image_total_pixels) {
         printf("hide_image(): Input image too small to encode secret image.\n");
         delete_image(secret_image);
         delete_image(input_image);
