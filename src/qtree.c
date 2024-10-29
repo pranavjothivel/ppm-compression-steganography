@@ -314,7 +314,7 @@ void file_print_line(char *line, FILE *fp) {
     fprintf(fp, "%s\n", line);
 }
 
-bool is_leaf_node (QTNode *node) {
+bool is_leaf_node(QTNode *node) {
     if ((node->child1 == NULL) && (node->child2 == NULL) && (node->child3 == NULL) & (node->child4 == NULL)) {
         return true;
     }
