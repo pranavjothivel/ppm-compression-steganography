@@ -183,7 +183,7 @@ unsigned int hide_message(char *message, char *input_filename, char *output_file
         for (int i = 0; i < 8; i++) {
             unsigned char bit = (character >> (7 - i)) & 1;
             unsigned char new_pixel = (pixel[i] & ~1) | bit;
-            file
+            fprintf(fp, "%hhu %hhu %hhu\n", new_pixel, new_pixel, new_pixel);
         }
 
         counter--;
