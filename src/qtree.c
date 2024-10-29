@@ -1,6 +1,10 @@
 #include "qtree.h"
 
 QTNode *create_quadtree(Image *image, double max_rmse) {
+    if (image == NULL) {
+        printf("create_quadtree(): Image is null.\n");
+        return NULL;
+    }
     return create_quadtree_helper(image, max_rmse, 0, 0, image->height, image->width);
 }
 
