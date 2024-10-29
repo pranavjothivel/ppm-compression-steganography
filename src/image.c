@@ -178,7 +178,7 @@ unsigned int hide_message(char *message, char *input_filename, char *output_file
 
         // 8-bit ASCII code for the null byte - 00000000 (aka NUL)
 
-        unsigned char character = (counter == 1) ? '\0' : (unsigned char) message[msg_char_index];
+        unsigned char character = (counter == 1) ? '\0' : (unsigned char) message[msg_char_index++];
 
         for (int i = 0; i < 8; i++) {
             unsigned char bit = (character >> (7 - i)) & 1;
@@ -186,7 +186,6 @@ unsigned int hide_message(char *message, char *input_filename, char *output_file
             fprintf(fp, "%hhu %hhu %hhu\n", new_pixel, new_pixel, new_pixel);
         }
 
-        msg_char_index++;
         counter--;
     }
 
