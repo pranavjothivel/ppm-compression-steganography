@@ -1,4 +1,4 @@
-# CSE 220 - Homework 03  
+# PPM Image Compression and Steganography
 Pranav Jothivel
 
 ## Checklist  
