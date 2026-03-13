@@ -66,3 +66,6 @@ To skip Valgrind checks, run all tests, and keep the output directory:
 ```bash
 ./tests/scripts/run_tests.sh --no-valgrind --keep-output
 ```
+
+## License 
+This repository contains my personal implementation of a course project, along with additional work completed beyond the original requirements. It is shared for viewing and personal evaluation only; see the `LICENSE` file for full terms.
